@@ -19,18 +19,21 @@ samtools markdup - markdup.bam
 Note that SAMtools commands that require an input and/or output file as parameter must be given "\texttt{-}" if piped. Also, the commands above use unnecessary compression to save on parameters for simplicity. \\
 
 \subsection{Recommendation}
-To minimize unnecessary operations and shorten computation time, the parameter \texttt{-u} should be used in SAMtools sort. This allows for uncompressed output, eliminating the overhead caused by compressing in SAMtools sort and then decompressing immediately afterward with the subsequent command. \\
-Exceptions are if the result is not piped to another SAMtools command that reads the output immediately but to an IO operation like  file writing or network transfer. \\
-Because of the possibility of exceptions and the difficulty of determining the output destination, removing the compression from SAMtools sort's output on detection of piped output is unreasonable. However, a warning should be displayed, if the output is unspecified. In this case, the filename of the output file is set to "\texttt{-}" and the output is forwarded to standard output using HTSlib. The change in the file name can be detected, and a warning can be printed to standard error, allowing users unfamiliar with compression options to adjust their parameters and save on computation time.
-
+To minimize unnecessary operations and shorten computation time, the parameter \texttt{-u} should be used in SAMtools sort. This allows for uncompressed output, eliminating the overhead caused by compressing in SAMtools sort and then decompressing immediately afterward with the subsequent command. As shown in \ref{fig:pipeSpeeds}, this reduces the computation time by about one third on for every tested amount of threads.\\
 \begin{figure}
+
     \begin{center}
         \import{figures/}{pipeSpeeds.pgf}
     \end{center}
     \caption{Execution time comparison between different methods of chaining a \texttt{samtools sort} command with a \texttt{samtools view} command: \textit{With temporary file} uses "\texttt{\&\&}" for chaining, both of the others use "\texttt{|}". The \texttt{samtools sort} command utilizes a total of 8GB of RAM, while only the RAM parameter (\texttt{-m}), the number of threads, and the \texttt{-u} flag in the case of \textit{Piped without output compression} are not set to their default values.
     The \texttt{samtools view} command uses default parameters (except number of threads) in every case. SAMtools is compiled with zlib. The Input file is a 2.3GB unsorted BAM file on default compression level. With this memory settings, one temporary file is generated.
     }
+    \label{fig:pipeSpeeds}
 \end{figure}
+Exceptions are if the result is not piped to another SAMtools command that reads the output immediately but to an IO operation like  file writing or network transfer. \\
+Because of the possibility of exceptions and the difficulty of determining the output destination, removing the compression from SAMtools sort's output on detection of piped output is unreasonable. However, a warning should be displayed, if the output is unspecified. In this case, the filename of the output file is set to "\texttt{-}" and the output is forwarded to standard output using HTSlib. The change in the file name can be detected, and a warning can be printed to standard error, allowing users unfamiliar with compression options to adjust their parameters and save on computation time.
+
+
 
 
 
