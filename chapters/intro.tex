@@ -1,0 +1,12 @@
+\section{Introduction}
+To enable faster downstream analysis, aligned DNA-Read Files are sorted.
+
+\subsection{SAM and BAM files}
+A Sequence Alignment/Map (SAM) as specified by Li et al. \cite{samformat} is used to store the alignment of sequences against reference sequences. It consists of a Header Section and an Alignment Section. The Header Section contains meta information such as the format version or the sorting of the content and a dictionary of the reference sequences, whereas the Alignment Section contains aligned segments with alignment information and meta information such as the read quality. Here, a segment is a continuous sequence or subsequence of a raw DNA read. \\
+The alignment information mainly consists of the ID of the reference sequence the alignment is mapped to, the position where the alignment starts in the reference sequence and a CIGAR string providing the alignment at this position. The CIGAR String as specified in \cite{samformat} lists i.a. sequential matches, mismatches, insertions and deletions and therefore represents the alignment of the corresponding segment and its reference sequence. \\
+A BAM file is the binary representation of a SAM file. The main differences are the usage of a 4-bit encoding for the sequences, 3-bit for CIGAR Symbols and a 0-based instead of 1-based coordinate system for the position. \\
+Furthermore, a BAM file is per default \textit{bgzf} compressed. This is a compression method that utilizes \textit{gzip} \cite{gzip} and the \textit{deflate} algorithm \cite{deflate} by Phil Katz to compress large files into blocks of less than 64KB size (compressed and uncompressed). These blocks are the concatenated allowing fast random access using index files but also compatibility with gzip as gzip allows this combination of multiple compressed files to one file. \\
+Like gzip, bgzf supports compression levels ranging from 1 (fastest but worst) to 9 (slowest but best) which are basically the compression levels used for the underlying gzip compression.
+
+\subsection{SAMtools}
+SAMtools \cite{12ySamtools} is a collection of tools to work on alignment data. It relies on the co-developed HTSlib \cite{bonfield_htslib_2021} for reading and writing information files, e.g. BAM files. SAMtools offers functionality for different operations on alignment data, such as format conversion, statistics, variant calling and many more, including the sorting, which is the focus here.

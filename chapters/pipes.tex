@@ -1,0 +1,34 @@
+\section{Pipelines}
+
+\subsection{Unix Pipelines}
+
+\textit{Pipelines} are a way of forwarding the output of one program to the input of another program. In Unix-like operating systems, it connects the standard output of the first of one program with the standard input of another program. This is implemented by a ring-buffer in the memory and usually expressed in the shell by writing a vertical bar "\texttt{|}" between the commands. For example, 
+\begin{minted}{bash} 
+ls | grep .bam 
+\end{minted}
+lists all files in the current directory using \texttt{ls} and then filters them using \texttt{grep} to display only files having ".bam" in their name. 
+
+\subsection{Pipelining in SAMtools}
+In the context of SAMtools, piping can be used to chain multiple commands without the need to write temporary files. This can result in a huge speedup, as neither compression is needed if pipes are used nor the temporary output has to be written to the disk. These two operations account for a significant portion of the runtime of SAMtools \texttt{sort} command. In addition, as the outputs are streams, the second command can start processing the output of the first one as soon, as it begins to be generated instead of having to wait for the first one to finish writing the whole file.
+Marking duplicate alignments for example can be done by using 
+\begin{minted}{bash} 
+samtools fixmate -m example.bam - | \
+samtools sort - | \ 
+samtools markdup - markdup.bam
+\end{minted}
+Note that SAMtools commands that require an input and/or output file as parameter must be given "\texttt{-}" if piped. Also, the commands above use unnecessary compression to save on parameters for simplicity. \\
+
+\subsection{Recommendation}
+To minimize unnecessary operations and shorten computation time, the parameter \texttt{-u} should be used in SAMtools sort. This allows for uncompressed output, eliminating the overhead caused by compressing in SAMtools sort and then decompressing immediately afterward with the subsequent command. \\
+Exceptions are if the result is not piped to another SAMtools command that reads the output immediately but to an IO operation like  file writing or network transfer. \\
+Because of the possibility of exceptions and the difficulty of determining the output destination, removing the compression from SAMtools sort's output on detection of piped output is unreasonable. However, a warning should be displayed, if the output is unspecified. In this case, the filename of the output file is set to "\texttt{-}" and the output is forwarded to standard output using HTSlib. The change in the file name can be detected, and a warning can be printed to standard error, allowing users unfamiliar with compression options to adjust their parameters and save on computation time.
+
+\begin{figure}
+    \begin{center}
+        \import{figures/pipes}{pipeDefault.pgf}
+    \end{center}
+    \caption{A PGF histogram from \texttt{matplotlib}.}
+\end{figure}
+
+
+
