@@ -25,9 +25,11 @@ Because of the possibility of exceptions and the difficulty of determining the o
 
 \begin{figure}
     \begin{center}
-        \import{figures/pipes}{pipeDefault.pgf}
+        \import{figures/}{pipeSpeeds.pgf}
     \end{center}
-    \caption{A PGF histogram from \texttt{matplotlib}.}
+    \caption{Execution time comparison between different methods of chaining a \texttt{samtools sort} command with a \texttt{samtools view} command: \textit{With temporary file} uses "\texttt{\&\&}" for chaining, both of the others use "\texttt{|}". The \texttt{samtools sort} command utilizes a total of 8GB of RAM, while only the RAM parameter (\texttt{-m}), the number of threads, and the \texttt{-u} flag in the case of \textit{Piped without output compression} are not set to their default values.
+    The \texttt{samtools view} command uses default parameters (except number of threads) in every case. SAMtools is compiled with zlib. The Input file is a 2.3GB unsorted BAM file on default compression level. With this memory settings, one temporary file is generated.
+    }
 \end{figure}
 
 
