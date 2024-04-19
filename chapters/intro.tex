@@ -13,5 +13,17 @@ Furthermore, a BAM file is per default \textit{BGZF} compressed.
 \subsection{BGZF Compression}
 BGZF is a lossless compression method proposed at the same time as the BAM format. Widely used compression methods like GZIP compress a file from the beginning to the end in one piece. This has the advantage that matching pieces of the file can be found over a larger span. However, to decrypt such a compressed file, it also needs to be read from the beginning and, depending on the compression method, decompressed at least until the point of interest. Since alignment data can produce very large files but not all of their regions are needed for every use case, it is beneficial to enable some form of random access. To archive this, BGZF utilizes \textit{GZIP} \cite{gzip} and the \textit{DEFLATE} algorithm \cite{deflate} by Phil Katz to compress large files into blocks of less than 64KB size (compressed and uncompressed). These blocks are the concatenated. Thus, fast random access using index files is possible. In an index file, the position of a piece of information is stored in a 64-bit integer. It consists of a 48-bit unsigned integer \textit{coffset} indicating the number of the compressed block and a 16-bit unsigned integer \textit{uoffset} describing the position in the uncompressed block. \\
 Besides this, the BGZF format also provides compatibility with GZIP. As GZIP allows this combination of multiple compressed files to one file, a BGZF-compressed file can be decompressed by any standard GZIP implementation. This can be practical if for example a SAM file that can be viewed with any text editor is compressed using BGZF. \\
-Like GZIP, BGZF supports compression levels ranging from 1 (fastest but worst) to 9 (slowest but best) which are basically the compression levels used for the underlying GZIP compression. The speed of the compression depends mainly on the compression level, the implementation of the underlying GZIP functionality and the number of used threads.
+Like GZIP, BGZF supports compression levels ranging from 1 (fastest but worst) to 9 (slowest but best) which are basically the compression levels used for the underlying GZIP compression. The compression levels affect the size of the compressed files as shown in Figure \ref{fig:compSizes}.
+\begin{figure}
+        \import{figures/}{compSizes.pgf}
+    \caption{Comparison of the size of BGZF compressed files on all compression levels, exemplified using a 10.4GiB unsorted BAM file.}
+    \label{fig:compSizes}
+\end{figure}
+The speed of the compression depends mainly on the compression level, the implementation of the underlying GZIP functionality and the number of used threads (see Figure \ref{fig:compSpeed}).  
+\begin{figure}[ht]
+        \import{figures/}{compSpeed.pgf}
+    \caption{Comparison of the output rate of HTSlib's \texttt{bgzip} which uses BGZF to compress A 10.4GiB unsorted BAM file. For reference, compression level 0 is plotted in the smaller inset plot.}
+    \label{fig:compSpeed}
+\end{figure}
+To measure the compression speed while minimizing the influence of the sort and merge processes, the speed of HTSlib's \texttt{bgzip} can be measured. This is a tool using BGZF to compress arbitrary files. As its inner mechanisms are exactly the same as the compression part of SAMtools' \texttt{sort} tool (use the same underlying HTSlib methods), pipelining \texttt{bgzip}'s output to \texttt{/dev/null} gives an estimation of the computation time needed only for compression at using SAMtools \texttt{sort}. This still holds for compression level 0. At this level, the input is not compressed, but directly written to the output.
 
