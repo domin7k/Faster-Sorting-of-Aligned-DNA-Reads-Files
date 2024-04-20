@@ -2,6 +2,7 @@
 
 \subsection{Algorithm}
 \input{chapters/current_behavior}
+\FloatBarrier
 
 \subsection{Time Allocation}
 Understanding the resource utilization and the time allocation of the different parts of the sorting process is crucial to be able to optimize its computation time. However, the process has different points of constraint on different machines, as we will see in the following. \\
@@ -22,4 +23,9 @@ HTSlib is the tool used by SAMtools to perform all file operations. On its READM
 
 \subsection{Temporary Files}
 SAMtools \texttt{sort} has, as mentioned above, a hard coded limit for temporary files. Moreover, this limit is reached very late because of multi level merging. \\
-To understand how many temporary files are written, we have to look into the algorithm for merging. The first variable influencing the generation of temporary files is the memory limit. Defaulting to 768MiB, it gets multiplied by the number of threads. The result is the limit up to which BAM records are read in one block. This is also a good approximation for the size of a small temporary file before compression. At least one MiB per thread is enforced to prevent the creation of a huge amount of temporary files. 
+To understand how many temporary files are written, we have to look into the algorithm for merging. The first variable influencing the generation of temporary files is the memory limit. Defaulting to 768MiB, it gets multiplied by the number of threads. The result is the limit up to which BAM records are read in one block. This is also a good approximation for the size of a small temporary file before compression. At least one MiB per thread is enforced to prevent the creation of a huge amount of temporary files. Intuitively, one would think, that the sorting gets faster the more memory can be used. Figure \ref{fig:maxMems}
+\begin{figure}
+        \import{figures/}{maxMems.pgf}
+    \caption{Execution time of SAMtools \texttt{sort} on a 2.4GB BAM file using default parameters except \texttt{-m} for memory limitation setting. }
+    \label{fig:maxMems}
+\end{figure}
