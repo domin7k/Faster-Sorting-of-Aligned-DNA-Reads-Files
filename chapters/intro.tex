@@ -19,8 +19,8 @@ Like GZIP, BGZF supports compression levels ranging from 1 (fastest but worst) t
     \caption{Comparison of the size of BGZF compressed files on all compression levels, exemplified using a 10.4GiB unsorted BAM file.}
     \label{fig:compSizes}
 \end{figure}
-The speed of the compression depends mainly on the compression level, the implementation of the underlying GZIP functionality and the number of used threads (see Figure \ref{fig:compSpeed}).  
-\begin{figure}[ht]
+The speed of the compression depends mainly on the compression level, the GZIP-implementation and the number of used threads (see Figure \ref{fig:compSpeed}).  
+\begin{figure}
         \import{figures/}{compSpeed.pgf}
     \caption{Comparison of the output rate of HTSlib's \texttt{bgzip} which uses BGZF to compress A 10.4GiB unsorted BAM file. For reference, compression level 0 is plotted in the smaller inset plot.}
     \label{fig:compSpeed}
