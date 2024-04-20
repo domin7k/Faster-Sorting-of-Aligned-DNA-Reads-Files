@@ -1,0 +1,1 @@
+maxmemplot.py -f "/home/dominik/ba/timeAtMaxMems.csv" -d "Ececution time on a single Thread" -p "m" -pname "\texttt{max\_mem}(MiB)" -title "Execution Time through Memory Settings" -save "maxMems"
