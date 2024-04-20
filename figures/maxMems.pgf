@@ -345,7 +345,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=2.608329in,y=0.238278in,,top]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \texttt{max\_mem}(MiB)}%
+\pgftext[x=2.608329in,y=0.238278in,,top]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont \texttt{max\_mem} (MiB)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
