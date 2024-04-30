@@ -7,7 +7,7 @@ SAMtools \texttt{sort} passes its output to standard output if no output file is
 The maximum number of temporary files is hard-coded as 64 in a constant named \texttt{MAX\_TMP\_FILES}. \\
 The gzip compression level for temporary files is set to 1, while the compression level of the result file can be changed via the \texttt{-l} parameter. It defaults to the default compression level used by the library that implements the compression, usually 6, but can be set to a number between 0 (no compression) and 9 (highest and slowest compression).
 
-\subsubsection{Sorting}
+\subsubsection{Sorting} \label{sorting}
 
 SAMtools performs an external sort process using temporary files that are merged in the end. The sorting process flow is represented by the flowchart in Figure \ref{fig:flow}.
 \begin{figure}[ht]
