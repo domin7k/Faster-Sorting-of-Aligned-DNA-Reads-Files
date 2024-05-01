@@ -47,9 +47,11 @@ Increasing the number of allowed temporary files to 1024 while keeping everythin
     \caption{Speedup after setting the limit for temporary files to 1019. Calculated by dividing the values from Figure \ref{fig:maxMems} by the values of the increased temporary file limit. All other parameters are the same as in Figure \ref{fig:maxMems}.}
     \label{fig:memSpeedup}
 \end{figure}
-Figure \ref{fig:memSpeedup} shows, that a noticeable speedup occurs only at the lower memory settings but not at the lowest. 
+Figure \ref{fig:memSpeedup} shows, that a noticeable speedup occurs only at the lower memory settings but not at the lowest. One can understand this by referring to Figure \ref{fig:writes}.
 \begin{figure}
         \import{figures/}{writes.pgf}
-    \caption{Speedup after setting the limit for temporary files to 1019. Calculated by dividing the values from Figure \ref{fig:maxMems} by the values of the increased temporary file limit. All other parameters are the same as in Figure \ref{fig:maxMems}.}
-    \label{fig:memSpeedup}
+    \caption{
+    The y-axis shows the amount of compress and write operations for blocks in size of the available memory. This means, if one temporary file is produced, it counts as one write operation. If 32 files are merged together with one in-memory block, it counts as 33 Operations. Vertical gray lines mark numbers of temporary files produced in the example in Figure \ref{fig:maxMems} and \ref{fig:memSpeedup}. (E.g. 527 at 25MiB \texttt{max\_mem}.)
+    }
+    \label{fig:writes}
 \end{figure}
