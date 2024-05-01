@@ -703,7 +703,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.616216in,y=2.340357in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont Reference / Up to 1020 Temporary Files}%
+\pgftext[x=1.616216in,y=2.340357in,left,base]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont Reference / Up to 1019 Temporary Files}%
 \end{pgfscope}%
 \end{pgfpicture}%
 \makeatother%
