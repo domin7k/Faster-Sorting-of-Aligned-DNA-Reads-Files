@@ -649,7 +649,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=0.648274in, y=0.370622in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont uncomp}%
+\pgftext[x=1.124262in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont uncomp}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -674,7 +674,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=0.809931in, y=0.316437in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlibng (6)}%
+\pgftext[x=1.363304in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlibng (6)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -699,7 +699,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.083638in, y=0.340709in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zopfli (6)}%
+\pgftext[x=1.602345in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zopfli (6)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -724,7 +724,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.322679in, y=0.340709in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zopfli (1)}%
+\pgftext[x=1.841387in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zopfli (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -749,7 +749,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.715934in, y=0.448691in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont slz (1)}%
+\pgftext[x=2.080428in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont slz (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -774,7 +774,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.838204in, y=0.366927in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont igzip (3)}%
+\pgftext[x=2.319470in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont igzip (3)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -799,7 +799,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=1.810984in, y=0.180488in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont libdeflate (6)}%
+\pgftext[x=2.558511in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont libdeflate (6)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -824,7 +824,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=2.388505in, y=0.417494in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlib (6)}%
+\pgftext[x=2.797553in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlib (6)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -849,7 +849,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=2.516831in, y=0.339970in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont miniz (6)}%
+\pgftext[x=3.036595in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont miniz (6)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -874,7 +874,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=2.528108in, y=0.180488in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont libdeflate (1)}%
+\pgftext[x=3.275636in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont libdeflate (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -899,7 +899,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=3.105630in, y=0.417494in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlib (1)}%
+\pgftext[x=3.514678in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlib (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -924,7 +924,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=3.200347in, y=0.316437in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlibng (1)}%
+\pgftext[x=3.753719in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont zlibng (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -949,7 +949,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=3.472997in, y=0.339970in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont miniz (1)}%
+\pgftext[x=3.992761in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont miniz (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
@@ -974,7 +974,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=3.750537in, y=0.366927in, left, base,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont igzip (1)}%
+\pgftext[x=4.231802in,y=0.778749in,right,top,rotate=35.000000]{\color{textcolor}\rmfamily\fontsize{10.000000}{12.000000}\selectfont igzip (1)}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
