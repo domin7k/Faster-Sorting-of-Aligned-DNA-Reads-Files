@@ -76,6 +76,11 @@ Miniz provides for each level a marginally worse compression ratio than zlib and
 In contrast, libdeflate has for each level a better compression rate while being noticeably faster than zlib. Its default level (6) is even faster than zlib's lowest level (0).
 zlib-ng is comparable with libdeflate but offers a wider range. While zlib-ng on compression level 1 is faster than libdeflate on the same level, it also compresses less. However, zlib-ng on compression level 6 offers a better compression rate than libdeflate on the same level, but is noticeably slower. \\
 On the other hand, decompression speed should be taken into account: Figure 
+\begin{figure}
+        \import{figures/}{decomp.pgf}
+    \caption{Execution time of \sort using 7BGZF to test different compression libraries. Libraries are sorted after their execution time on a single thread. The compression level is noted in brackets. The inset figure also shows the performance of zopfli on level 1 and 6.}
+    \label{fig:bgzfspeed}
+\end{figure}
 In conclusion, igzip, slz as well as zlib-ng and libdeflate on compression level 1 are very fast and suitable for temporary files and files to be used soon. On compression level 6, zlib-ng and libdeflate are good default values and provide a trade-off between file size and computation time. Zopfli offers very good compression, but the huge increase in computation time makes using high compression levels of zlib-ng and libdeflate more preferable in most settings for \sort.
 
 \subsection{Recommendation}
