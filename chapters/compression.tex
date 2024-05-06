@@ -75,17 +75,27 @@ The other extreme is zopfli. It compresses on both tested levels better than eve
 Miniz provides for each level a marginally worse compression ratio than zlib and also has longer processing times. \\
 In contrast, libdeflate has for each level a better compression rate while being noticeably faster than zlib. Its default level (6) is even faster than zlib's lowest level (0).
 zlib-ng is comparable with libdeflate but offers a wider range. While zlib-ng on compression level 1 is faster than libdeflate on the same level, it also compresses less. However, zlib-ng on compression level 6 offers a better compression rate than libdeflate on the same level, but is noticeably slower. \\
-On the other hand, decompression speed should be taken into account: Figure 
-\begin{figure}
+On the other hand, decompression speed should be taken into account: 
+\begin{figure}[t]
         \import{figures/}{decomp.pgf}
-    \caption{Execution time of \sort using 7BGZF to test different compression libraries. Libraries are sorted after their execution time on a single thread. The compression level is noted in brackets. The inset figure also shows the performance of zopfli on level 1 and 6.}
-    \label{fig:bgzfspeed}
+    \caption{Execution time of SAMtools \texttt{view} with \texttt{-u} flag on a single core, piped to \texttt{/dev/null}. The test file is a 104GB uncompressed BAM file, compressed by \sort using the 7BGZF settings shown on the x-axis. HTSlib was build with \texttt{--with-libdeflate} resp. \texttt{--without-libdeflate} for the decompression by SAMtools \texttt{view}.}
+    \label{fig:decomp}
 \end{figure}
+Figure \ref{fig:decomp} shows that there is no substantial difference in decompressing files compressed by different libraries. Nevertheless, there is a trend indicating that files with smaller sizes, thus higher compression rates, are decompressed faster. 
+Additionally, it is evident again that libdeflate is significantly faster than zlib. Surprisingly, this still holds for the uncompressed file ("uncomp" in Figure \ref{fig:decomp}). On first view, this is unexpected, as HTSlib skips the decompression operations once it recognized uncompressed gzip blocks. But even for compression level 0 HTSlib calculates a crc32 checksum. Looking at SAMtools \texttt{view} in a profiler, the implementation for the crc32 checksum in libdeflate appears to be about 10 times faster. \\
 In conclusion, igzip, slz as well as zlib-ng and libdeflate on compression level 1 are very fast and suitable for temporary files and files to be used soon. On compression level 6, zlib-ng and libdeflate are good default values and provide a trade-off between file size and computation time. Zopfli offers very good compression, but the huge increase in computation time makes using high compression levels of zlib-ng and libdeflate more preferable in most settings for \sort.
 
 \subsection{Recommendation}
 The most obvious way to increase compression speed is to increase the number of available threads. This can be done using the "\texttt{-@}" parameter. Threads are also used for parallel sorting of in memory blocks of read BAM records. This further speeds up the process. \\
 For compression levels, it comes down to what the purpose of the sorted data is when deciding the level to be used. 
 If the file should be archived, setting the level to 9 for maximal compression is an option. However, most of the time, sorting is a step in a larger pipeline, and the data is read and processed further soon. \\
-To speed this up, it is recommended to use compression level 0 ("\texttt{-l 0}" which is equal to "\texttt{-u}") if the data is not written directly to  disc or transferred over network with limited throughput. \\
-In the other case, it is recommended to use compression level 1 ("\texttt{-l 1}").
+To speed this up, I recommend to use compression level 0 ("\texttt{-l 0}" which is equal to "\texttt{-u}") if the data is not written directly to  disc or transferred over network with limited throughput. \\
+If the data is written to disk directly or transferred via network, it comes down to the IO conditions which level to choose (see next section). In most cases, compression level 1 ("\texttt{-l 1}") is a good starting point.\\
+When it comes to the zlib implementation to use, I recommend libdeflate. While not being the very fastest implementation, it is already supported by SAMtools. This means the stability is much higher as its usage is tested with SAMtools. Also, the faster crc32 implementation leads to performance improvements. At last, installing and using libdeflate is simpler than using \texttt{LD\_PRELOAD} or changing the environment for every user. After installation, the user can use SAMtools exactly as he has done before without libdeflate, but with better performance.
+
+\subsection{Evaluation}
+For better isolation from IO impacts, I piped the output of \sort to \texttt{/dev/null}. However, this only takes away the impacts of possibly limited write speed. Still, limitations in the writing of temporary files or in reading can distort the impacts of changing only compression properties.
+
+\subsection{Future Work}
+Intel's igzip performs even better than libdeflate. Although this comes with the downside of larger files, implementing igzip support in HTSlib would enable even faster compression for temporary files. E.g. a mapping could be used mapping compression level 1 and 2 to compression level 1 and 3 of igzip and the higher levels to libdeflate levels. \\
+For improving 7BGZF, a differentiation between output files and temporary files could be implemented.
