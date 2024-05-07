@@ -95,6 +95,7 @@ When it comes to the zlib implementation to use, I recommend libdeflate. While n
 
 \subsection{Evaluation}
 For better isolation from IO impacts, I piped the output of \sort to \texttt{/dev/null}. However, this only takes away the impacts of possibly limited write speed. Still, limitations in the writing of temporary files or in reading can distort the impacts of changing only compression properties.
+Zlib: 19.7, libdeflate level 6: 19.1 libdeflate level 21.0, igzip 1 29.4
 
 \subsection{Future Work}
 Intel's igzip performs even better than libdeflate. Although this comes with the downside of larger files, implementing igzip support in HTSlib would enable even faster compression for temporary files. E.g. a mapping could be used mapping compression level 1 and 2 to compression level 1 and 3 of igzip and the higher levels to libdeflate levels. \\
