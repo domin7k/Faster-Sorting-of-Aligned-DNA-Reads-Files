@@ -2,12 +2,13 @@
 Compression is a part of writing BAM files, as per default compression is applied to all BAM files and even part of the specification. Although compression of BAM files is beneficial in the long term in order to reduce storing costs and transfer speed, it comes with a significant resource overhead. 
 
 \subsection{Analysis}
-Running on 16 cores, with a total of 32GiB of memory, \sort takes 71 minutes and 57 seconds to sort a 215GB BAM file. However, \sort only uses 2 minutes and 35 seconds, which are 3.6\% of the total time, for sorting (merging not included). What is the rest of the time spend on? \\ 
+Running on 16 cores, with a total of 32\,GiB of memory, \sort takes 71 minutes and 57 seconds to sort a 215\,GB BAM file. However, \sort only uses 2 minutes and 35 seconds, which are 3.6\% of the total time, for sorting (merging not included). What is the rest of the time spend on? \\ 
 Performing SAMtools \texttt{sort} on a laptop, trough various settings compression and decompression together account for around 95\% of the CPU time. Approximately 80\% are solely required by the \textit{deflate} method that is used for the compression. \\
 SAMtools has outsourced all file operations to HTSlib. HTSlib depends on zlib for compression and decompression. Compression is done in blocks using the DEFLATE algorithm. Thus, compression can and is parallelized: Every time a block is to be compressed, HTSlib gives it to a thread pool of workers that compress blocks in parallel.
 
 
-\subsubsection{Compression Levels} are  the gzip way of trading computation time against space requirements. The user can set them using the "\texttt{-l}" parameter in SAMtools sort. For other SAMtools commands where the "\texttt{-l}" parameter does not exist, the user can still change the compression level of the output via adding \texttt{--output-fmt-option level=1} to the arguments of the command (Put the desired compression level between 0 and 9 instead of \texttt{1}). \\
+\subsection{Compression Levels}
+Compression Levels are  the gzip way of trading computation time against space requirements. The user can set them using the "\texttt{-l}" parameter in SAMtools sort. For other SAMtools commands where the "\texttt{-l}" parameter does not exist, the user can still change the compression level of the output via adding \texttt{--output-fmt-option level=1} to the arguments of the command (Put the desired compression level between 0 and 9 instead of \texttt{1}). \\
 In general, SAMtools uses two different compression levels. Per default, it uses the default compression level of the zlib implementation (compression level 6 for zlib). This can be changed as explained above. For temporary files, SAMtools uses compression level 1.
 Differences between the compression levels are shown in Figures \ref{fig:compSizes}, \ref{fig:compSpeed}, \ref{fig:bgzfComps} and \ref{fig:bgzfspeed}.
 
@@ -68,7 +69,7 @@ Most libraries offer the GZIP-typical compression levels of 0 up to 9 and level 
 \footnotetext[2]{zopfli does not use compression levels but can specify iterations of the algorithm. Here, the level I show in experiments is always used as iterations.}
 \footnotetext{Drop-In does not mean, that the API matches to 100\% but that the most important symbols are implemented}
 
-\section{7BGZF Results}
+\subsection{7BGZF Results}
 Running \sort with 7BGZF as shown in Figures \ref{fig:bgzfComps} and \ref{fig:bgzfspeed} offers insights on which zlib implementations show potential to be used in SAMtools: \\
 The best performance could be reached by igzip. Both tested levels performed better than all the other compression libraries. However, the compression rate of both tested compression levels turned out worse than libdeflate on compression level 1. While slz takes approximately the same time as igzip on level 3, its compression rate is more comparable to igzip on compression level 1. \\
 The other extreme is zopfli. It compresses on both tested levels better than every other library. But the better compression comes with between 70 and 90 times the execution time needed for zlib on the same level.
@@ -78,7 +79,7 @@ zlib-ng is comparable with libdeflate but offers a wider range. While zlib-ng on
 On the other hand, decompression speed should be taken into account: 
 \begin{figure}[t]
         \import{figures/}{decomp.pgf}
-    \caption{Execution time of SAMtools \texttt{view} with \texttt{-u} flag on a single core, piped to \texttt{/dev/null}. The test file is a 104GB uncompressed BAM file, compressed by \sort using the 7BGZF settings shown on the x-axis. HTSlib was build with \texttt{--with-libdeflate} resp. \texttt{--without-libdeflate} for the decompression by SAMtools \texttt{view}.}
+    \caption{Execution time of SAMtools \texttt{view} with \texttt{-u} flag on a single core, piped to \texttt{/dev/null}. The test file is a 104\,GB uncompressed BAM file, compressed by \sort using the 7BGZF settings shown on the x-axis. HTSlib was build with \texttt{--with-libdeflate} resp. \texttt{--without-libdeflate} for the decompression by SAMtools \texttt{view}.}
     \label{fig:decomp}
 \end{figure}
 Figure \ref{fig:decomp} shows that there is no substantial difference in decompressing files compressed by different libraries. Nevertheless, there is a trend indicating that files with smaller sizes, thus higher compression rates, are decompressed faster. 
@@ -94,13 +95,15 @@ If the data is written to disk directly or transferred via network, it comes dow
 When it comes to the zlib implementation to use, I recommend libdeflate. While not being the very fastest implementation, it is already supported by SAMtools. This means the stability is much higher as its usage is tested with SAMtools. Also, the faster crc32 implementation leads to performance improvements. At last, installing and using libdeflate is simpler than using \texttt{LD\_PRELOAD} or changing the environment for every user. After installation, the user can use SAMtools exactly as he has done before without libdeflate, but with better performance.
 
 \subsection{Evaluation}
-For better isolation from IO impacts, I piped the output of \sort to \texttt{/dev/null}. However, this only takes away the impacts of possibly limited write speed. Still, limitations in the writing of temporary files or in reading can distort the impacts of changing only compression properties.
-\begin{figure}
+\begin{figure}[t]
         \import{figures/}{speedupComps.pgf}
-    \caption{Speedup of \sort after changing compression parameters. Libdeflate is used via the HTSlib integration, igzip via 7BGZF. Reference is \sort using HTSlib with default zlib compression. The input file is a }
-    \label{fig:decomp}
+    \caption{Speedup of \sort after changing compression parameters. Libdeflate is used via the HTSlib integration, igzip via 7BGZF. Reference is \sort using HTSlib with default zlib compression. The input file is a 23.6\,GB unsorted BAM file with default zlib compression. \sort had a total of 48\,GiB memory available. The output is piped to \texttt{/dev/null} to minimize IO impacts. Still, limitations in the writing of temporary files or in reading can distort the impacts of changing only compression properties. \sort compresses the 23.6\,GB compressed input file to 21,1\,GB using zlib (the reference), 20.5\,GB using libdeflate on level 6, 22,6\,GB using libdeflate on level 1 and 31.5\,GB using igzip on level 1 (in both settings). \\
+    For one to four cores \sort uses, the speedup with using faster compression is up to 5. However, with more cores available, the speedup decreases to approximately 1.5 for all compression methods.}
+    \label{fig:speedupCompression}
 \end{figure}
-Zlib: 19.7, libdeflate level 6: 19.1 libdeflate level 21.0, igzip 1 29.4
+Reducing the compression level and choosing a faster zlib implementation leads to a speedup of up to 5 for single core sorting. As the compression part in \sort is highly parallel, increasing the number of threads also speeds up the process. This lowers the impact of the compression on the total execution time. Therefore, the speedup lowers with increasing the number of threads to 1.5 for all tested compression settings, as shown in Figure \ref{fig:speedupCompression}. \\
+In conclusion, to reduce computation time of the compression done by \sort, the user can lower the compression level or choose a different zlib implementation. Libdeflate emerged to provide higher compression with lower computation time in both compression and decompression. Other libraries like igzip offer faster compression than libdeflate, but are currently not supported by HTSlib. 7BGZF is a tool for testing 7 different zlib implementations for compression in HTSlib.
+
 
 \subsection{Future Work}
 Intel's igzip performs even better than libdeflate. Although this comes with the downside of larger files, implementing igzip support in HTSlib would enable even faster compression for temporary files. E.g. a mapping could be used mapping compression level 1 and 2 to compression level 1 and 3 of igzip and the higher levels to libdeflate levels. \\
