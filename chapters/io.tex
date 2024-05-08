@@ -2,6 +2,14 @@
 Input and Output can also be constraints of the sorting process. As the internal mechanisms of SAMtools usually work very fast and are highly parallel, but have to process huge amounts of data, input and output devices can also limit the computation speed. \\
 In contrast to a program's behavior or used libraries, often the IO devices can hardly be changed. However, in some cases there are possibilities to speed up the process.
 
+\section{Compression}
+Lowering the compression level leads to faster compression. Thus, using as little compression or no compression at all should speed up the process. However, taking IO requirements into account, compressing files turns out to be faster than writing them uncompressed if the disk does not match the compression throughput. In this case, writing uncompressed files is slower than compressing them first. As compression is done blockwise with every block compressed individually, it scales well with increasing the amount of threads.
+\begin{figure}[t]
+        \import{figures/}{iowaitLevels.pgf}
+    \caption{Using the same settings as in figure \ref{fig:pipeSpeeds} for chaining a \sort with a SAMtools \texttt{view} command, this figure shows the temporal progression of generating each file. The colored bars represent the time in which the output that is annotated at the left axis is generated and written. Thin black lines indicate the file being present on disk but not written to. The time between vertical, dashed lines is used to sort BAM records in memory, the timespan after writing the last file and sorting accounts for reading records from the input file. }
+    \label{fig:pipeWrite}
+\end{figure}
+
 \subsection{Unix Pipelines}
 
 \textit{Pipelines} are a way of forwarding the output of one program to the input of another program. In Unix-like operating systems, they connect the standard output of one program with the standard input of another program. In the Linux Kernel, this is implemented \cite{noauthor_linuxfspipec_nodate} by a ring buffer in the memory. The user usually expresses a pipe in the shell by writing a vertical bar "\texttt{|}" between the commands. For example, 
@@ -32,8 +40,8 @@ Note that SAMtools commands that require an input and/or output file as paramete
 To minimize unnecessary operations and reduce computation time, the parameter \texttt{-u} should be used in the SAMtools sort. This allows for uncompressed output, eliminating the overhead caused by compressing in SAMtools sort and then decompressing immediately afterward with the subsequent command. As shown in \ref{fig:pipeSpeeds}, this reduces the computation time by about one third on for every tested amount of threads.\\
 \begin{figure}[t]
         \import{figures/}{pipeSpeeds.pgf}
-    \caption{Execution time comparison between different methods of chaining a \texttt{samtools sort} command with a \texttt{samtools view} command: \textit{With temporary file} uses "\texttt{\&\&}" for chaining, both of the others use "\texttt{|}". The command \texttt{samtools sort} utilizes a total of 8GB of RAM, while only the RAM parameter (\texttt{-m}), the number of threads, and the \texttt{ -u} flag in the case of \textit{Piped without output compression} are not set to their default values.
-    The \texttt{samtools view} command uses default parameters (except number of threads) in every case. SAMtools is compiled with zlib. The input file is a 2.3GB unsorted BAM file on the default compression level. With this memory setting, one temporary file is generated.
+    \caption{Execution time comparison between different methods of chaining a \texttt{samtools sort} command with a \texttt{samtools view} command: \textit{With temporary file} uses "\texttt{\&\&}" for chaining, both of the others use "\texttt{|}". The command \texttt{samtools sort} utilizes a total of 8\,GB of RAM, while only the RAM parameter (\texttt{-m}), the number of threads, and the \texttt{ -u} flag in the case of \textit{Piped without output compression} are not set to their default values.
+    The \texttt{samtools view} command uses default parameters (except number of threads) in every case. SAMtools is compiled with zlib. The input file is a 2.3\,GB unsorted BAM file on the default compression level. With this memory setting, one temporary file is generated.
     }
     \label{fig:pipeSpeeds}
 \end{figure}
