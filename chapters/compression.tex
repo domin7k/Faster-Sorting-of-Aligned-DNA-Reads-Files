@@ -90,21 +90,24 @@ Zopfli and miniz are excluded for clarity. Previous experiments showed that zopf
 Miniz provides for each level a marginally worse compression ratio than zlib and also has longer processing times, as previous experiments showed. \\
 
 Increasing the number of threads gradually reduces the speedup achieved by using faster compression libraries. The speedup of 5 igzip provides on one or two threads diminishes to 4 on 4 threads, to 2.5 on 8 threads and finally to 1.5 on 16 threads, the highest tested number of threads. For all other compression libraries and compression levels, igzip at compression level 1 serves as an upper limit. The speedup of all other libraries stays close to their single-thread speedup until the number of threads, where the speedup of igzip on compression level 1 drops below their single-thread speedup. Then their speedup approaches the speedup of igzip on compression level 1. Therefore, on 16 threads, all alternative zlib implementations on their tested compression levels archive a speedup of approximately 1.5. \\
-The speedup to the single-threaded execution time of the different compression libraries and compression levels increases slower for the settings archiving a higher single-thread speedup. 
-\begin{figure}[t]
+The speedup to the single-threaded execution time of the different compression libraries and compression levels increases slower for the settings archiving a higher single-thread speedup. The speedup of zlib on compression level 6 increases with every higher number of threads, reaching a speedup of 12 on 16 threads. In contrast, faster compression libraries such as igzip show a less significant increase in speedup. All tested compression libraries with the corresponding compression levels that archived a speedup as high or higher than libdeflate on compression level 1 compared to zlib on compression level 6 on a single thread reached their highest speedup against their single-thread performance on 8 cores with a speedup of less than 5. When raising the number of threads from 8 to 16, their speedup decreases slightly, as shown in Figure \ref{fig:bgzfSngleCoreSpeedup}.
+\begin{figure}[!htb]
         \import{figures/}{singleCoreSpeedupBGZF.pgf}
-    \caption{Speedup against single-t}
-    \label{fig:decomp}
+    \caption{Speedup against single-threaded performance of 7BGZF compression libraries and compression levels. Sorting the 2.3\,GiB default compressed BAM file with 48GiB of memory did not produce a temporary file. \\
+    The speedup of zlib on compression level 6 increases with every higher number of threads. In contrast, faster compression libraries such as igzip show a less significant increase in speedup. When raising the number of threads from 8 to 16, their speedup decreases slightly.}
+    \label{fig:bgzfSngleCoreSpeedup}
 \end{figure}
+This suggests that beyond a certain number of threads, compression, which is fully parallelized, is no longer the limiting factor. \\
 
-On the other hand, decompression speed should be taken into account: 
+Besides compression, decompression speed should be taken into account for the full picture. Here, differences between decompressing files compressed by 7BGZF compression libraries are in a range of 15\% around the average decompression time of compressed files for both decompression libraries.
 \begin{figure}[t]
         \import{figures/}{decomp.pgf}
-    \caption{Execution time of SAMtools \texttt{view} with \texttt{-u} flag on a single core, piped to \texttt{/dev/null}. The test file is a 104\,GB uncompressed BAM file, compressed by \sort using the 7BGZF settings shown on the x-axis. HTSlib was build with \texttt{--with-libdeflate} resp. \texttt{--without-libdeflate} for the decompression by SAMtools \texttt{view}.}
+    \caption{Execution time of SAMtools \texttt{view} with \texttt{-u} flag on a single core, piped to \texttt{/dev/null}. The test file is a 104\,GB uncompressed BAM file, compressed by \sort using the 7BGZF settings shown on the x-axis. HTSlib was build with \texttt{--with-libdeflate} for decompression utilizing libdeflate respective \texttt{--without-libdeflate} for the decompression utilizing zlib.}
     \label{fig:decomp}
 \end{figure}
-Nevertheless, there is a trend indicating that files with smaller sizes, thus higher compression rates, are decompressed faster. 
-Additionally, it is evident again that libdeflate is significantly faster than zlib. Surprisingly, this still holds for the uncompressed file ("uncomp" in Figure \ref{fig:decomp}). On first view, this is unexpected, as HTSlib skips the decompression operations once it recognized uncompressed gzip blocks. But even for compression level 0 HTSlib calculates a crc32 checksum. Looking at SAMtools \texttt{view} in a profiler, the implementation for the crc32 checksum in libdeflate appears to be about 10 times faster. \\
+Which compressed file is decompressed the fastest varies between the two decompression libraries. Nevertheless, there is a trend indicating that files with smaller sizes, thus higher compression rates, are decompressed faster as shown in Figure \ref{fig:decomp}. 
+Additionally, it is evident that libdeflate is significantly faster than zlib for decompression. This still holds for the uncompressed file ("uncomp" in Figure \ref{fig:decomp}). This is due to a checksum calculation. For each read block, HTSlib calculates a crc32 checksum. Looking at SAMtools \texttt{view} in a profiler, the implementation for the crc32 checksum in libdeflate turns out to be about 10 times faster. \\
+
 In conclusion, igzip, slz as well as zlib-ng and libdeflate on compression level 1 are very fast and suitable for temporary files and files to be used soon. On compression level 6, zlib-ng and libdeflate are good default values and provide a trade-off between file size and computation time. Zopfli offers very good compression, but the huge increase in computation time makes using high compression levels of zlib-ng and libdeflate more preferable in most settings for \sort.
 
 \subsection{Recommendation}
