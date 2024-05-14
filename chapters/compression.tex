@@ -97,7 +97,12 @@ The speedup to the single-threaded execution time of the different compression l
     The speedup of zlib on compression level 6 increases with every higher number of threads. In contrast, faster compression libraries such as igzip show a less significant increase in speedup. When raising the number of threads from 8 to 16, their speedup decreases slightly.}
     \label{fig:bgzfSngleCoreSpeedup}
 \end{figure}
-This suggests that beyond a certain number of threads, compression, which is fully parallelized, is no longer the limiting factor. \\
+This suggests that beyond a certain number of threads, compression, which is fully parallelized, is no longer the limiting factor. This is supported by the observation that the relative time \sort spends on decompression, sorting and compression converges to a similar ratio for all compression libraries on the tested levels. On 16 threads, all compression libraries on the tested levels used 21\% to 31\% of their computation time for decompression, 6\% to 9\% for sorting and 60\% to 71\% for compression. Here, the faster compression methods use more of their computation time for decompression than slower methods like zlib on compression level 6. On a single thread, the faster libraries use much more, around 50\% of their time for decompression, while zlib on level 6 only uses 9\% of its computation time for decompression. On two threads, the percentage of the computation time the compression methods with a higher single-thread speedup spend on compression decreases further, but grows again with more used threads. In contrast, for the compression methods with less single-thread speedup, the relative computation time spend on compressing decreases gradually up to around 70\% on 16 cores. This is illustrated in Figure \ref{fig:relative7BGZF}.\\
+\begin{figure}[t]
+        \import{figures/}{relative7BGZFtimes.pgf}
+    \caption{}
+    \label{fig:relative7BGZF}
+\end{figure}
 
 Besides compression, decompression speed should be taken into account for the full picture. Here, differences between decompressing files compressed by 7BGZF compression libraries are in a range of 15\% around the average decompression time of compressed files for both decompression libraries.
 \begin{figure}[t]
@@ -105,7 +110,7 @@ Besides compression, decompression speed should be taken into account for the fu
     \caption{Execution time of SAMtools \texttt{view} with \texttt{-u} flag on a single core, piped to \texttt{/dev/null}. The test file is a 104\,GB uncompressed BAM file, compressed by \sort using the 7BGZF settings shown on the x-axis. HTSlib was build with \texttt{--with-libdeflate} for decompression utilizing libdeflate respective \texttt{--without-libdeflate} for the decompression utilizing zlib.}
     \label{fig:decomp}
 \end{figure}
-Which compressed file is decompressed the fastest varies between the two decompression libraries. Nevertheless, there is a trend indicating that files with smaller sizes, thus higher compression rates, are decompressed faster as shown in Figure \ref{fig:decomp}. 
+Which compressed file is decompressed the fastest varies between the two decompression libraries. Nevertheless, there is a trend indicating that files with smaller sizes, thus higher compression rates, are decompressed faster, as shown in Figure \ref{fig:decomp}. 
 Additionally, it is evident that libdeflate is significantly faster than zlib for decompression. This still holds for the uncompressed file ("uncomp" in Figure \ref{fig:decomp}). This is due to a checksum calculation. For each read block, HTSlib calculates a crc32 checksum. Looking at SAMtools \texttt{view} in a profiler, the implementation for the crc32 checksum in libdeflate turns out to be about 10 times faster. \\
 
 In conclusion, igzip, slz as well as zlib-ng and libdeflate on compression level 1 are very fast and suitable for temporary files and files to be used soon. On compression level 6, zlib-ng and libdeflate are good default values and provide a trade-off between file size and computation time. Zopfli offers very good compression, but the huge increase in computation time makes using high compression levels of zlib-ng and libdeflate more preferable in most settings for \sort.
