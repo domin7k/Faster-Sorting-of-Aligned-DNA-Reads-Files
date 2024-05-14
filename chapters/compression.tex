@@ -91,6 +91,11 @@ Miniz provides for each level a marginally worse compression ratio than zlib and
 
 Increasing the number of threads gradually reduces the speedup achieved by using faster compression libraries. The speedup of 5 igzip provides on one or two threads diminishes to 4 on 4 threads, to 2.5 on 8 threads and finally to 1.5 on 16 threads, the highest tested number of threads. For all other compression libraries and compression levels, igzip at compression level 1 serves as an upper limit. The speedup of all other libraries stays close to their single-thread speedup until the number of threads, where the speedup of igzip on compression level 1 drops below their single-thread speedup. Then their speedup approaches the speedup of igzip on compression level 1. Therefore, on 16 threads, all alternative zlib implementations on their tested compression levels archive a speedup of approximately 1.5. \\
 The speedup to the single-threaded execution time of the different compression libraries and compression levels increases slower for the settings archiving a higher single-thread speedup. 
+\begin{figure}[t]
+        \import{figures/}{singleCoreSpeedupBGZF.pgf}
+    \caption{Speedup against single-t}
+    \label{fig:decomp}
+\end{figure}
 
 On the other hand, decompression speed should be taken into account: 
 \begin{figure}[t]
