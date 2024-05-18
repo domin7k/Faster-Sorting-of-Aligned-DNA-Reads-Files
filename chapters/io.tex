@@ -1,19 +1,23 @@
 \section{Input/Output} 
-Input and Output can also be constraints of the sorting process. As the internal mechanisms of SAMtools usually work very fast and are highly parallel, but have to process huge amounts of data, input and output devices can also limit the computation speed. \\
-In contrast to a program's behavior or used libraries, often the IO devices can hardly be changed. However, in some cases there are possibilities to speed up the process.
+Input and Output can also be constraints of the sorting process. As the internal mechanisms of SAMtools usually work very fast and are highly parallel, but process huge amounts of data, input and output devices can also limit the computation speed. \\
+In contrast to a program's behavior or used libraries, often the IO devices can hardly be changed. Nevertheless, in some cases there are possibilities to speed up the process.
 
-\section{Compression}
-Lowering the compression level leads to faster compression. Thus, using as little compression or no compression at all should speed up the process. However, taking IO requirements into account, compressing files turns out to be faster than writing them uncompressed if the disk does not match the compression throughput. In this case, writing uncompressed files is slower than compressing them first. As compression is done blockwise with every block compressed individually, it scales well with increasing the amount of threads.
+\subsection{Compression}
+Lowering the compression rate by using a faster zlib implementation or a lower compression level leads to faster compression. Setting the compression level to 0, the user can archive even faster output. \\
+However, taking IO requirements into account, compressing files turns out to be faster than writing them uncompressed if the disk does not match the compression throughput. In this case, writing uncompressed files is slower than compressing them first. As compression is done blockwise with every block compressed individually, it scales well with increasing the amount of threads. Therefore, IO bottlenecks occur with higher probability if using a higher amount of threads. \\
+On our test system, removing the output compression leads to a speedup of approximately 3.5 on a single thread. However, on 16 threads, running \sort with the default compression level 6 takes only 62\% of the time it takes with uncompressed output (see Figure \ref{fig:execIO}). \\
 \begin{figure}[t]
         \import{figures/}{execIOBottleneck.pgf}
     \caption{Execution time of \sort with output written to disk. Writing uncompressed Data is faster for up to two threads. If \sort has more than two threads available, writing compressed BAM files is faster. Compression at compression level 1 is still faster than compression at compression level 6 (the default level).}
     \label{fig:execIO}
 \end{figure}
+The reason for this is the limited write speed of the disk, which is at 56.5\,MB/s for our test setup. With uncompressed output setting, \sort writes 2.22\,GB in 10.5\,s if piped to \texttt{/dev/null}. This results in a throughput of 211.7\,MB/s in the writing phase of \sort. Due to the disk's inability to maintain the pace, the CPUs have to pause and await the completion of IO operations. The time a CPU waits in idle for IO Operations is called IOWait time. It is below 2 seconds and nearly exactly the same for both compressed output from the example above, but increases with the number of threads used from 2 seconds to 6 seconds for the uncompressed output, as shown in Figure \ref{fig:iowait}.
 \begin{figure}
         \import{figures/}{iowaitLevels.pgf}
     \caption{IOWait time of the experiment shown in Figure \ref{fig:execIO}. IOWait time is the time all processors spend in IDLE because they are waiting for IO operations to return. For compression with libdeflate using compression level 1 and 6, the IOWait time is on a similar level. After at more than one core, it is nearly constant. For uncompressed output, the IOWait time increases to up to 6 times the IOWait time at compression usage. }
     \label{fig:iowait}
 \end{figure}
+
 
 
 \subsection{Unix Pipelines}

@@ -18,6 +18,7 @@
 \usepackage{xspace}
 \usepackage{array}
 \usepackage{tabularx,booktabs}
+\usepackage{afterpage}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 % Used for displaying a sample figure. If possible, figure files should
@@ -63,7 +64,9 @@ The abstract should briefly summarize the contents of the paper in
 % \keywords{First keyword  \and Second keyword \and Another keyword.}
 \end{abstract}
 %
-%
+\setcounter{tocdepth}{2}
+\tableofcontents
+\newpage
 %
 \input{chapters/intro}
 \FloatBarrier
