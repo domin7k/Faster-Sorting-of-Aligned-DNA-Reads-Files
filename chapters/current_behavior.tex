@@ -1,4 +1,4 @@
-\subsubsection{Prerequisites}
+\subsection{Prerequisites}
 The process of sorting alternates, depending on some internal Constants and command-line-arguments: \\
 We only focus on sorting by the order of the reference, then position and then the REVERSE flag which indicates, if the sequence is aligned forward or backward to the reference. This order is the one used by SAMtools per default, although other sorting criteria e.g. tags or the read name are possible.\\
 The maximum amount of memory used to sorting is calculated by the amount of memory the user specifies via the \texttt{-m} option multiplied by the (via \texttt{-@} option) assigned number of threads. Here, we refer to the total amount as \texttt{max\_mem}. \\
@@ -7,7 +7,7 @@ SAMtools \texttt{sort} passes its output to standard output if no output file is
 The maximum number of temporary files is hard-coded as 64 in a constant named \texttt{MAX\_TMP\_FILES}. \\
 The gzip compression level for temporary files is set to 1, while the compression level of the result file can be changed via the \texttt{-l} parameter. It defaults to the default compression level used by the library that implements the compression, usually 6, but can be set to a number between 0 (no compression) and 9 (highest and slowest compression).
 
-\subsubsection{Sorting} \label{sorting}
+\subsection{Sorting} \label{sorting}
 
 SAMtools performs an external sort process using temporary files that are merged in the end. The sorting process flow is represented by the flowchart in Figure \ref{fig:flow}.
 \begin{figure}[ht]

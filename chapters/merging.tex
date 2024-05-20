@@ -1,4 +1,4 @@
-\section{Temporary Files} 
+\section{Temporary Files} \label{tempfiles}
 
 Temporary files are necessary for \sort to work as a stream while processing more data than can be held in memory. Unfortunately, writing temporary files is time-consuming. When only looking at the time between reading and decompressing the input and writing and compressing the output, operations involving temporary files lead to the most time consumption. Thus, the amount of temporary files should be minimized. More specific, a BAM record should be written as infrequently as possible. On the other hand, limitations of the Operating System have to be taken into consideration.
 
