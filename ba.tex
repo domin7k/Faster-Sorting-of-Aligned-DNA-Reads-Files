@@ -17,9 +17,11 @@
 \usepackage{float}
 \usepackage{xspace}
 \usepackage{array}
-\usepackage{tabularx,booktabs}
+\usepackage{tabularx,booktabs}\usepackage[hidelinks]{hyperref}
+\usepackage{cleveref}
 \usepackage{afterpage}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
+
 
 % Used for displaying a sample figure. If possible, figure files should
 % be included in EPS format.
@@ -31,8 +33,12 @@
 \renewcommand\#{\protect\scalebox{0.8}{\protect\raisebox{0.4ex}{\char"0023}}}
 \definecolor{darkgrey}{RGB}{100,100,100} 
 \newcommand{\sort}{SAMtools \texttt{sort}\xspace}
+\interfootnotelinepenalty=100000
+
 
 \begin{document}
+
+
 %
 \title{Faster Sorting of Aligned DNA-Read Files}
 %
@@ -69,6 +75,7 @@ The abstract should briefly summarize the contents of the paper in
 \newpage
 %
 \input{chapters/intro}
+\input{chapters/prereqs}
 \FloatBarrier
 \input{chapters/related}
 \input{chapters/analysis}
