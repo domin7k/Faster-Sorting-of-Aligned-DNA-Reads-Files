@@ -1,0 +1,19 @@
+\appendix
+\appendixpage
+\addappheadtotoc
+\section{Methods}
+
+I typed in "abcde" and that's how it worked
+
+
+\section{Profiling Timeline Screenshots}
+
+\begin{figure}
+    \makebox[\textwidth]{
+    \includegraphics[width=1.5\linewidth]{figures/timelinePipe.png}}
+\caption{Screenshot of the VTune profiler on running \sort piped to SAMtools \texttt{view}. Both commands utilize 4 threads. However, the total of 8 CPUs the testing machine provides is never reached, as visualized under CPU Utilization. After 5.7 seconds, \sort starts merging the two temporary files it created before into the pipeline. The pipeline's buffer size is 1\,MB and the resulting file has a size of 230\,MB. In the merging and writing phase of \sort, 230 alternating spikes in CPU Time in the workers responsible for compression and decompression of \sort (first 4 rows) and SAMtools \texttt{view} can be found, indicating compression being a bottleneck of the piped operation.} \label{fig1}
+\end{figure}
+
+
+
+\newpage
