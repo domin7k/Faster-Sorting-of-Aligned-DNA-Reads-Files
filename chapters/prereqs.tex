@@ -1,7 +1,7 @@
 \section{Prerequisites}
 
 \subsection{SAMtools}
-SAMtools~\cite{12ySamtools} is a collection of tools to work on alignment data, such as aligned DNA-Reads. It relies on the co-developed HTSlib~\cite{bonfield_htslib_2021} for reading and writing information files, namely SAM, BAM and CRAM files. SAMtools offers functionality for different operations on alignment data, such as format conversion, statistics, variant calling and many more, including the sorting, which is the focus here. 
+SAMtools~\cite{12ySamtools} is a collection of tools to work on alignment data, such as aligned DNA-Reads. It relies on the co-developed HTSlib~\cite{bonfield_htslib_2021} for reading and writing information files, namely SAM, BAM, and CRAM files. SAMtools offers functionality for different operations on alignment data, such as format conversion, statistics, variant calling and many more, including sorting, which is the focus here. 
 
 \subsection{Aligned DNA-Reads}
 DNA-Reads are short sequences of nucleotides, the fundamental building blocks of DNA. These nucleotides are denoted by their bases, adenine (\texttt{A}), guanine (\texttt{G}), cytosine (\texttt{C}), and thymine (\texttt{T}). A DNA-Read can consist of multiple contiguous sequences. \\
@@ -11,7 +11,7 @@ Aligned DNA-Reads are DNA-Reads aligned to a reference sequence. The alignment m
 \subsection{SAM and BAM files}
 A SAM (Sequence Alignment Map) file as specified by Li et al.~\cite{samformat} is used to store the alignment of sequences against reference sequences. It consists of a header section and an alignment section. The header section contains meta information such as the format version or the sorting of the content and a dictionary of the reference sequences, whereas the alignment section contains aligned segments with alignment information and meta information such as the read quality. A segment is a continuous sequence or subsequence of a raw DNA-Read. Aligned DNA-Reads are eventually put into multiple records with different segments in the alignment section, as single BAM records can not store changes in directions of the alignment on the reference sequence.\\
 
-The alignment information primarily includes the ID of the reference sequence to which the alignment is mapped, the position in the reference sequence where the alignment starts, and a CIGAR string detailing the alignment at this position. The CIGAR String consists of a list of symbols representing sequential matches, mismatches, insertions, and deletions. \\
+The alignment information primarily includes the ID of the reference sequence to which the alignment is mapped, the position in the reference sequence where the alignment starts, and a CIGAR string detailing the alignment at this position (sequential matches, mismatches, insertions, and deletions. \\
 
 A BAM (Binary Alignment Map) file is the binary representation of a SAM file. Compared to the SAM format, this format utilizes a 4-bit encoding for DNA sequences, a 3-bit encoding for CIGAR symbols, and adopts a 0-based coordinate system for positions. Furthermore, a BAM file is per default \textit{BGZF} compressed.
 
