@@ -1,1 +1,1 @@
-scalingPlot.py -f "/home/dominik/fusessh/2024-04-21T11:26:25.952347/results.csv" -d "Execution time on 8 threads" -p "m" -pname "\texttt{max\_mem} (MiB), Input Size (GiB)" -title "Input and Memory Scaling" -safe "memScaling"
+scalingPlot.py -f "/home/dominik/fusessh/2024-05-24T00:34:38.788016scaleMem/results.csv" -d "Execution time on 8 threads" -p "m" -pname "\texttt{max\_mem} [MiB], Input Size [GiB]" -title "Input and Memory Scaling" -save "memScaling"
