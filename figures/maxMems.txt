@@ -1,1 +1,1 @@
-maxmemplot.py -f "/home/dominik/fusessh/2024-04-30T14:45:04.597284maxMemReference/results.csv" -d "Execution time on a single thread" -p "m" -pname "\texttt{max\_mem} (MiB)" -title "Execution Time through Memory Settings" -save "maxMems"
+maxmemplot.py -f "/home/dominik/fusessh/2024-05-27T11:07:59.339507maxMemsReference/results.csv" -d "Execution time on a single thread" -p "m" -pname "\texttt{max\_mem} (MiB)" -title "Execution Time through Memory Settings" -save "maxMems"
