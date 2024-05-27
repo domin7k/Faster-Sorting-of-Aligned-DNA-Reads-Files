@@ -1,9 +1,11 @@
 \section{Input/Output} 
-Input and Output can also be constraints of the sorting process. As the internal mechanisms of SAMtools usually work very fast and are highly parallel, but process huge amounts of data, input and output devices can also limit the computation speed. \\
-In contrast to a program's behavior or used libraries, often the IO devices can hardly be changed. Nevertheless, in some cases there are possibilities to speed up the process.
+While the internal algorithms of \sort are highly optimized for parallel processing, the runtime of \sort can also be constrained by limitations of the input and output devices. 
+In contrast to a program's behavior or used libraries, often the IO devices can hardly be changed. However, in certain scenarios, optimization strategies can still be employed to improve processing speed.
 
 \subsection{Compression}
-Lowering the compression rate by using a faster zlib implementation or a lower compression level leads to faster compression. Setting the compression level to 0, the user can archive even faster output. \\
+\sort outputs sorted BAM files containing aligned DNA-Reads in a BGZF compressed format. The BGZF compression format employed by \sort relies on GZIP compression internally. GZIP offers various compression levels (0-9), with compression level 0 resulting in uncompressed data.
+The user can archive lower runtimes of \sort by using a faster implementation for GZIP compatible compression, or a lower compression level (\Cref{compression}). If the user sets the compression level to 0, \sort skips the compression step and outputs uncompressed data, leading to a higher throughput of \sort. 
+
 However, taking IO requirements into account, compressing files turns out to be faster than writing them uncompressed if the disk does not match the compression throughput. In this case, writing uncompressed files is slower than compressing them first. As compression is done blockwise with every block compressed individually, it scales well with increasing the amount of threads. Therefore, IO bottlenecks occur with higher probability if using a higher amount of threads. \\
 On our test system, removing the output compression leads to a speedup of approximately 3.5 on a single thread. However, on 16 threads, running \sort with the default compression level 6 takes only 62\% of the time it takes with uncompressed output (see Figure \ref{fig:execIO}). \\
 \begin{figure}[t]
@@ -22,14 +24,18 @@ The reason for this is the limited write speed of the disk, which is at 56.5\,MB
 
 \subsection{Unix Pipelines}
 
-\textit{Pipelines} are a way of forwarding the output of one program to the input of another program. In Unix-like operating systems, they connect the standard output of one program with the standard input of another program. In the Linux Kernel, this is implemented \cite{noauthor_linuxfspipec_nodate} by a ring buffer in the memory. The user usually expresses a pipe in the shell by writing a vertical bar "\texttt{|}" between the commands. For example, 
-\begin{minted}{bash} 
-ls | grep .bam 
-\end{minted}
-lists all files in the current directory using \texttt{ls} and then filters them using \texttt{grep} to display only files having ".bam" in their name. 
+\textit{Pipelines} are a way of forwarding the output of one program to the input of another program. In Unix-like operating systems, they connect the standard output of one program with the standard input of another program. In the Linux Kernel, this is implemented by a ring buffer in memory~\cite{noauthor_linuxfspipec_nodate}. When the output of a program is piped to the input of another, the first one writes to the buffer until the buffer is full, or the write operation is finished. The operating system then halts the first program and allows the second program to read the data from the buffer. In shell scripting, users typically indicate a pipe by placing a vertical bar symbol between commands.
+
+
+% \begin{minted}{bash} 
+% ls | grep .bam 
+% \end{minted}
+% lists all files in the current directory using \texttt{ls} and then filters them using \texttt{grep} to display only files having ".bam" in their name. 
 
 \subsection{Pipelining in SAMtools}
-Pipelining enables all advantages of working with streams. For \sort, this has the following consequences: \sort can read BAM records as soon as a potential preceding command has produced them. Here, if the potential preceding command supports this, he can give uncompressed BAM data to \sort. This eliminates the need for decompression for \sort and for compression for the potential preceding command. It also eliminates writing and reading files to the disk in between the commands. Note that the process generating the input for SAMtools \texttt{sort} is most likely halted once the memory limit of \texttt{sort} is reached. This is due to the buffer offered by the pipeline being full and thus the write operation being blocked. \sort only empties the buffer again after a temporary files is written. Looking at the output of sort, there is also no need for compression and writing to disk if piped. \\
+SAMtools' commands are designed to work on a stream. They process data sequentially, reading input and writing output in a single pass, without revisiting previous data.
+Therefore, users can combine several SAMtools commands with Unix Pipelines. For \sort, this has the following consequences: \sort can read BAM records as soon as a potential preceding command has written them. Here, if the potential preceding command supports this, it can give uncompressed BAM data to \sort, eliminating the need for decompression for \sort and for compression for the potential preceding command. Pipelining also reduces IO operations, as the outputs of the piped commands are not written to the disk but kept in memory. Note that the process generating the input for \sort is most likely halted once the memory limit of \sort is reached. This is due to the buffer offered by the pipeline being full and thus the write operation being blocked. \sort only empties the buffer again after a temporary files is written. Looking at the output of sort, there is also no need for compression and writing to disk if piped. 
+
 Pipelining can be used to chain multiple SAMtools commands without the need to write temporary files in between them, as all SAMtools commands are working on streams. This can result in a huge speedup, as compression and writing account for a substantial portion of \sort's computation time. In addition, as the outputs are streams, the second command can start processing the output of the first one as soon as it begins to be generated, instead of having to wait for the first one to finish writing the whole file. \\
 Figure \ref{fig:pipeWrite} illustrates the temporal progression of file writing when using pipelining compared to chaining commands with "\texttt{\&\&}".
 \begin{figure}[t]

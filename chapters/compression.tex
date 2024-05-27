@@ -1,4 +1,4 @@
-\section{Compression}
+\section{Compression}\label{compression}
 Per specification, compression is a part of writing BAM files. BAM files contain information on the alignment of DNA sequences to a set of reference sequences. The compression method used in BAM files is BGZF (refer to \ref{bgzf}). BGZF internally uses GZIP for compressing small blocks of a file, which BGZF then concatenates. Compression of BAM files reduces storage space and thus storing costs as well as transfer-times of the files over network. However, it comes with a substantial resource overhead. 
 COMMENT
 
