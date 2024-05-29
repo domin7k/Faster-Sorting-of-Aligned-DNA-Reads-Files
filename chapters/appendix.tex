@@ -3,7 +3,43 @@
 \addappheadtotoc
 \section{Methods}
 
-I typed in "abcde" and that's how it worked
+\subsection{Setting Compression Levels In SAMtools}\label{methodeComp}
+In \sort, the user can set the compression level of the output file using the "\texttt{-l}" parameter. Possible options are integers from 0 to 9. Compression level 0 is equal to no compression (equal to the \texttt{-u} parameter).
+
+For other SAMtools commands where the "\texttt{-l}" parameter does not exist, the user can still change the compression level of the output via adding \texttt{--output-fmt-option level=1} to the arguments of the command (Put the desired compression level between 0 and 9 instead of \texttt{1}).
+
+\subsection{Configuring Libdeflate Support in HTSlib} \label{turnLibdeflate}
+
+To decide manually between using zlib and libdeflate, the user can run the HTSlib \texttt{configure} script with the \texttt{--with-libdeflate} resp. \texttt{--without-libdeflate} option. To use \texttt{LD\_PRELOAD} for changing the zlib implementation, the user must build HTSlib without libdeflate.
+
+\subsection{Libdeflate Compression Level Mapping}\label{compMapping}
+\begin{table}[]
+    \centering
+    \begin{tabular}{l|>{\hspace{0.1em}} c >{\hspace{0.1em}} c >{\hspace{0.1em}} c >{\hspace{0.1em}} c >{\hspace{0.1em}} c >{\hspace{0.1em}} c >{\hspace{0.1em}}c >{\hspace{0.1em}} c >{\hspace{0.1em}} c}
+         zlib & \hspace{0.1em} 1 & 2 & 3 & 4 & 5 & \textbf{6} & 7 & 8 & 9 \\
+         libdeflate \hspace{0.1em} & \hspace{0.1em} 1 & 2 & 3 & 5 & 6 & \textbf{7} & 8 & 10 & 12 \\
+    \end{tabular} \vspace{1em}
+    \caption{Mapping between zlib compression levels and libdeflate compression levels in HTSlib. The default level is marked \textbf{bold}.}
+    \label{tab:levelMapping}
+\end{table}
+
+\subsection{Configuring 7BGZF}\label{7bgzfConfig}
+
+To configure the compression library and the compression level, 7BGZF uses to compress BAM files in the BGZF format, the user can set the \texttt{BGZF\_METHOD} environment variable to a compression library's name concatenated with a compression level before running a SAMtools command. 
+
+For the compression libraries, users can choose one of {\texttt{zlib}}, {\texttt{miniz}}, {\texttt{slz}}, {\texttt{libdeflate}}, {\texttt{zlibng}}, {\texttt{igzip}}, and {\texttt{zopfli}}. Their possible compression levels vary:
+
+\begin{itemize}
+\itemsep 0mm
+    \item {\texttt{zlib}}, {\texttt{miniz}}, and {\texttt{zlibng}} offer levels from \texttt{1} to \texttt{9}.
+    \item {\texttt{libdeflate}} offers levels from \texttt{1} to \texttt{12}.
+    \item {\texttt{igzip}} offers levels from \texttt{1} to \texttt{3}.
+    \item {\texttt{slz}} only supports level \texttt{1}.
+    \item While {\texttt{zopfli}} does not use compression levels in the traditional sense, it allows specifying an amount of iterations (greater than or equal to \texttt{1}) within the compression level parameter of 7BGZF.
+\end{itemize}
+
+Example for calling \sort with igzip and compression level 1: \\
+\texttt{BGZF\_METHOD=igzip1 LD\_PRELOAD=/path/to/7bgzf.so samtools sort …}
 
 
 \section{Profiling Timeline Screenshots}
