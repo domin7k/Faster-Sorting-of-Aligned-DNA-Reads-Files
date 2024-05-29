@@ -41,6 +41,11 @@ For the compression libraries, users can choose one of {\texttt{zlib}}, {\texttt
 Example for calling \sort with igzip and compression level 1: \\
 \texttt{BGZF\_METHOD=igzip1 LD\_PRELOAD=/path/to/7bgzf.so samtools sort …}
 
+\subsection{Using HTSlib as a Shared Library}\label{shared}
+
+SAMtools uses HTSlib as static library by default. To overriede methods from HTSlib, SAMtools must use HTSlib as a shared library.
+To use HTSlib as a shared library, the user has to change a single line in SAMtools' \texttt{config.mk.in} and change \texttt{@Hsource@HTSLIB = \$(HTSDIR)/libhts.a} to refer to \texttt{libhts.so} instead. Running SAMtools \texttt{./configure} script and \texttt{make} leads to SAMtools using HTSlib as a shared library.
+
 
 \section{Profiling Timeline Screenshots}
 
