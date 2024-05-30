@@ -138,7 +138,8 @@ On 16 threads, all compression libraries on their tested levels used 21\,\% to 3
 \afterpage{
     \begin{figure}[]
             \import{figures/}{relative7BGZFtimes.pgf}
-        \caption{Comparison of the relative runtimes of decompression, sorting, and compression through 7BGZF compression libraries. Decompression: walltime from program startup of \sort until start of the parallel sorting step. Sorting: time spent sorting the DNA-Reads (?). Compression the timespan from end of sorting to the end of the \sort process. Therefore, merging is a part of the compression time as it is done concurrent. While the compression methods with a higher single-thread speedup compared to the default zlib compression on level 6 use a lower percentage of their computation time on compression on a single thread, the usages converge to a similar ratio on 16 threads. Sorting the 2.3\,GiB default compressed BAM file with 48\,GiB of memory did not produce a temporary file.}
+        \caption{Comparison of the relative runtimes of decompression, sorting, and compression through 7BGZF compression libraries. Decompression: walltime from program startup of \sort until start of the parallel sorting step. Sorting: time spent sorting the DNA-Reads (?). Compression the timespan from end of sorting to the end of the \sort process. Therefore, merging is a part of the compression time as it is done concurrent. While the compression methods with a higher single-thread speedup compared to the default zlib compression on level 6 use a lower percentage of their computation time on compression on a single thread, the usages converge to a similar ratio on 16 threads. Sorting the 2.3\,GiB default compressed BAM file with 48\,GiB of memory did not produce a temporary file. \showthe\font
+}
         \label{fig:relative7BGZF}
     \end{figure}
     \clearpage
