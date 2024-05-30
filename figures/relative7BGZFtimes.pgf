@@ -6863,6 +6863,7 @@
 \pgfsetmiterjoin%
 \definecolor{currentfill}{rgb}{0.894118,0.101961,0.109804}%
 \pgfsetfillcolor{currentfill}%
+\pgfsetfillopacity{0.990000}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{currentstroke}%
@@ -6881,6 +6882,7 @@
 \pgfsetmiterjoin%
 \definecolor{currentfill}{rgb}{0.894118,0.101961,0.109804}%
 \pgfsetfillcolor{currentfill}%
+\pgfsetfillopacity{0.990000}%
 \pgfsetlinewidth{0.000000pt}%
 \definecolor{currentstroke}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{currentstroke}%
