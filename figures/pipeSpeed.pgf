@@ -1070,7 +1070,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=2.598152in,y=2.691943in,,base]{\color{textcolor}\rmfamily\fontsize{10.800000}{12.960000}\selectfont Spedup at Pipelining SAMtools \texttt{sort}}%
+\pgftext[x=2.598152in,y=2.691943in,,base]{\color{textcolor}\rmfamily\fontsize{10.800000}{12.960000}\selectfont Speedup at Pipelining SAMtools \texttt{sort}}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
