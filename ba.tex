@@ -20,6 +20,7 @@
 \usepackage{tabularx,booktabs}\usepackage[hidelinks]{hyperref}
 \usepackage{cleveref}
 \usepackage{afterpage}
+\usepackage{svg}
 \usepackage{appendix}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
@@ -34,6 +35,9 @@
 \renewcommand\#{\protect\scalebox{0.8}{\protect\raisebox{0.4ex}{\char"0023}}}
 \definecolor{darkgrey}{RGB}{100,100,100} 
 \newcommand{\sort}{SAMtools \texttt{sort}\xspace}
+\newcommand{\points}{Data points: Median, Error bars: Fastest and slowest of 3 runs. }
+\newcommand{\parents}{Numbers in parentheses indicate the compression level. }
+\newcommand{\threads}{One thread is single threaded computation, for a higher thread count, \sort uses the threads in addition to the main thread. }
 \interfootnotelinepenalty=100000
 
 
