@@ -1,4 +1,21 @@
 
+@inproceedings{bojesen_performance_1999,
+	address = {Berlin, Heidelberg},
+	title = {Performance {Engineering} {Case} {Study}: {Heap} {Construction}},
+	isbn = {978-3-540-48318-2},
+	shorttitle = {Performance {Engineering} {Case} {Study}},
+	doi = {10.1007/3-540-48318-7\_24},
+	abstract = {The behaviour of three methods for constructing a binary heap is studied. The methods considered are the original one proposed by Williams [1964], in which elements are repeatedly inserted into a single heap; the improvement by Floyd [1964], in which small heaps are repeatedly merged to bigger heaps; and a recent method proposed, e. g., by Fadel et al. [1999] in which a heap is built layerwise. Both the worstcase number of instructions and that of cache misses are analysed. It is well-known that Floyd's method has the best instruction count. Let N denote the size of the heap to be constructed, B the number of elements that fit into a cache line, and let c and d be some positive constants. Our analysis shows that, under reasonable assumptions, repeated insertion and layerwise construction both incur at most cN/B cache misses, whereas repeated merging, as programmed by Floyd, can incur more than (dN log2B)/B cache misses. However, for a memory-tuned version of repeated merging the number of cache misses incurred is close to the optimal bound N/B.},
+	language = {en},
+	booktitle = {Algorithm {Engineering}},
+	publisher = {Springer},
+	author = {Bojesen, Jesper and Katajainen, Jyrki and Spork, Maz},
+	editor = {Vitter, Jeffrey S. and Zaroliagis, Christos D.},
+	year = {1999},
+	keywords = {Cache Block, Cache Line, Outer Loop, Primitive Operation, Recursive Program},
+	pages = {301--315},
+}
+
 @misc{noauthor_iostat1_nodate,
 	title = {iostat(1) - {Linux} manual page},
 	url = {https://man7.org/linux/man-pages/man1/iostat.1.html},
