@@ -685,7 +685,7 @@
 \definecolor{textcolor}{rgb}{0.000000,0.000000,0.000000}%
 \pgfsetstrokecolor{textcolor}%
 \pgfsetfillcolor{textcolor}%
-\pgftext[x=2.721746in,y=2.710000in,,base]{\color{textcolor}\rmfamily\fontsize{12.000000}{14.400000}\selectfont Comparison of merge strategies}%
+\pgftext[x=2.721746in,y=2.710000in,,base]{\color{textcolor}\rmfamily\fontsize{12.000000}{14.400000}\selectfont Comparison of Merge Strategies}%
 \end{pgfscope}%
 \begin{pgfscope}%
 \pgfsetbuttcap%
