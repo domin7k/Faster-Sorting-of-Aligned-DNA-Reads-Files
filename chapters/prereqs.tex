@@ -33,17 +33,5 @@ Given that not all regions of large alignment data files are relevant for every 
 
 The BGZF format leverages compatibility with GZIP, enabling any standard GZIP decompression tool to handle BGZF-compressed files. This compatibility stems from BGZF exploiting GZIP's ability to combine multiple compressed blocks into a single file. Given that Gzip is highly prevalent as a compression technique, there are numerous compatible compression and decompression libraries for all platforms. Thus, employing the open-source GZIP internally simplifies the development of other legacy tools working with BGZF-compatible compression.  
 
-Like GZIP, BGZF supports compression levels ranging from 1 (fastest but largest file size) to 9 (slowest but smallest file size) analogously to the compression levels used for the underlying GZIP compression. The compression levels affect the size of the compressed aligned DNA-Read files, as shown in Figure~\ref{fig:compSizes}.
-\begin{figure}[htb]
-        \import{figures/}{compSizes.pgf}
-    \caption{Size of BGZF compressed files on compression levels 0-9, exemplified using a 10.4\,GiB unsorted BAM file. 
-    Although no compression yields a file four times as large, the distinctions between compression levels are less substantial.}
-    \label{fig:compSizes}
-\end{figure}
-The speed of the compression depends mainly on the compression level, the GZIP-implementation and the number of used threads (see Figure \ref{fig:compSpeed}).  
-\begin{figure}[htb]
-        \import{figures/}{compSpeed.pgf}
-    \caption{Output rate of HTSlib's \texttt{bgzip} which uses BGZF to compress A 10.4\,GiB uncompressed BAM file. For reference, we show the throughput of \texttt{bgzip} for compression level 0 in the smaller inset plot. \points}
-    \label{fig:compSpeed}
-\end{figure}
-To measure the compression speed, we measure the speed of HTSlib's \texttt{bgzip}, a tool to compress arbitrary files using BGZF. \sort uses the same methods as \texttt{bgzip} of HTSlib, the library utilized by SAMtools for compression and file operations. This still holds for compression level 0. For this compression level, \texttt{bgzip} as well as \sort do not compress, but directly write the output. Therefore, the compression speed of \texttt{bgzip} is relevant for sorting because it sets a lower boundary on writing the output of \sort, considering that compression is a part of creating BAM files.
+Like GZIP, BGZF supports compression levels ranging from 1 (fastest but largest file size) to 9 (slowest but smallest file size) analogously to the compression levels used for the underlying GZIP compression. We show detail on the resulting files sizes and throughput differences between the compression levels in \Cref{clevels}.
+

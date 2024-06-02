@@ -1,0 +1,13 @@
+\section{Conclusion and Outlook}
+
+In this work, we analyzed \sort for sorting aligned DNA-Read files, specifically BAM files. We found that the most time-consuming part of sorting is compression and writing of output and temporary files. To reduce the runtime of \sort, we proposed setting a higher limit for temporary files concurrently stored on disk, analyzed alternative implementations of the compression library used by SAMtools, and examined the impact of IO requirements on the runtime of \sort.
+
+Setting a higher limit for temporary files concurrently stored on disk reduces the number of merges \sort performs, leading to lower runtimes when sorting large files with limited memory.
+
+By using libdeflate as the compression library, which is automatically the case if SAMtools is installed via Bioconda, a single-thread speedup of 2.3 compared to zlib can be achieved. On 16 threads, this results in a speedup of 1.6.
+
+By utilizing Unix pipelines, we can remove the output compression of \sort, achieving a speedup of 1.8 when \sort is piped to SAMtools \texttt{view} (SAMtools \texttt{view} with zlib compression at level 6).
+
+To increase user awareness of better compression options, we recommended implementing warnings if zlib is used instead of libdeflate, and if the output of \sort is piped but still compressed. \\
+
+Future projects can investigate the merging process further, as this appears to be a bottleneck for very fast compression libraries. Additionally, they can implement igzip support into SAMtools and its file operation library HTSlib, as igzip has lower runtimes than libdeflate. Furthermore, the merging strategy of \sort can be enhanced by writing temporary files not only to half the limit for temporary files but to the limit minus existing "big files", which are results of previous merges, thereby halving the merges for the first few merges.
