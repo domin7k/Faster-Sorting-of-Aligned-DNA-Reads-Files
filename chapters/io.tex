@@ -1,8 +1,10 @@
 \section{Input/Output} 
+
+\subsection{Overview}
 While the internal algorithms of \sort are highly optimized for parallel processing, the runtime of \sort can also be constrained by limitations of the input and output devices. 
 In contrast to a program's behavior or used libraries, often the IO devices can hardly be changed. However, in certain scenarios, optimization strategies can still be employed to improve processing speed.
 
-\subsection{Compression}
+\subsection{Compression}\label{ioComp}
 \sort outputs sorted BAM files containing aligned DNA-Reads in a BGZF compressed format. The BGZF compression format employed by \sort internally relies on GZIP compression provided by the compression library zlib. Zlib offers various compression levels (0-9), with compression level 0 resulting in uncompressed data.
 The user can archive lower runtimes of \sort by using a faster implementation for GZIP compatible compression, or a lower compression level (\Cref{compression}). If the user sets the compression level to 0, \sort bypasses the compression step and outputs uncompressed data, leading to a higher throughput of \sort. 
 
@@ -43,38 +45,33 @@ These observations suggest an IO bottleneck on \sort with uncompressed output. H
 
 \subsection{Pipelining in SAMtools}
 SAMtools' commands are designed to work on a stream. They process data sequentially, reading input and writing output in a single pass, without revisiting previous data.
-Therefore, users can combine several SAMtools commands with Unix Pipelines. For \sort, this has the following consequences: \sort can read BAM records as soon as a potential preceding command has written them. If the potential preceding command supports this, it can give uncompressed BAM data to \sort. This eliminates the necessity for decompression in \sort and for compression for the potential preceding command. The potential IO bottleneck in writing uncompressed data is prevented by pipelining, as the outputs of the piped commands are not written to the disk but stored in memory. 
+Therefore, users can combine several SAMtools commands with Unix Pipelines. For \sort, this has the following consequences: \sort can read BAM records as soon as a potential preceding command has written them. If the potential preceding command supports this, it can give uncompressed BAM data to \sort. This eliminates the necessity for decompression in \sort and for compression for the potential preceding command. The potential IO bottleneck in writing uncompressed data is prevented by pipelining, as the outputs of the piped commands are not written to the disk but stored in memory.
 
-% Note that the process generating the input for \sort is most likely halted once the memory limit of \sort is reached. This is due to the buffer offered by the pipeline being full and thus the write operation being blocked. \sort only empties the buffer again after a temporary file is written. 
-Pipelining the output of \sort eliminates the need for both compression and writing to disk in the output stage of \sort. \\
+Using the default compression (zlib on compression level 6), the speedup on pipelining \sort into a SAMtools \texttt{view} command compared to \sort writing a file which is afterward read by SAMtools \texttt{view}, is for all tested amounts of threads below 1.2.(\Cref{fig:pipeSpeeds}).
 
-Testing pipelining for \sort with chaining \sort with SAMtools \texttt{view},  
-Figure \ref{fig:pipeWrite} illustrates the temporal progression of file writing when using pipelining compared to chaining commands with "\texttt{\&\&}".
+However, with \sort outputting uncompressed data, the speedup increases to approximately 1.8 for up to 8 used threads and 1.6 for 16 used threads.
 \begin{figure}[t]
-        \import{figures/}{pipeFileWriting.pgf}
-    \caption{Using the same settings as in figure \ref{fig:pipeSpeeds} for chaining a \sort with a SAMtools \texttt{view} command, this figure shows the temporal progression of generating each file. The colored bars represent the time in which the output that is annotated at the left axis is generated and written. Thin black lines indicate the file being present on disk but not written to. The time between vertical, dashed lines is used to sort BAM records in memory, the timespan after writing the last file and sorting accounts for reading records from the input file. }
-    \label{fig:pipeWrite}
-\end{figure}
-The diagram shows, that the start of writing the final output, which is the output of SAMtools \texttt{view}, is nearly at the same time as the start of the output of \sort if pipelining is used, but after the full output is written in the case of no pipeline usage. \\
-A more realistic use case would be e.g. marking duplicate alignments, which can be done by using 
-\begin{minted}{bash} 
-samtools fixmate -m example.bam - | \
-samtools sort - | \ 
-samtools markdup - markdup.bam
-\end{minted}
-Note that SAMtools commands that require an input and/or output file as parameter must be given "\texttt{-}" if piped. Also, the commands above use unnecessary compression to save on parameters for simplicity. \\
-
-\subsection{Recommendation}
-To minimize unnecessary operations and reduce computation time, the parameter \texttt{-u} should be used in the SAMtools sort. This allows for uncompressed output, eliminating the overhead caused by compressing in SAMtools sort and then decompressing immediately afterward with the subsequent command. As shown in \ref{fig:pipeSpeeds}, this reduces the computation time by about one third on for every tested amount of threads.\\
-\begin{figure}[t]
-        \import{figures/}{pipeSpeeds.pgf}
-    \caption{Execution time comparison between different methods of chaining a \texttt{samtools sort} command with a \texttt{samtools view} command: \textit{With temporary file} uses "\texttt{\&\&}" for chaining, both of the others use "\texttt{|}". The command \texttt{samtools sort} utilizes a total of 8\,GB of RAM, while only the RAM parameter (\texttt{-m}), the number of threads, and the \texttt{ -u} flag in the case of \textit{Piped without output compression} are not set to their default values.
-    The \texttt{samtools view} command uses default parameters (except number of threads) in every case. SAMtools is compiled with zlib. The input file is a 2.3\,GB unsorted BAM file on the default compression level. With this memory setting, one temporary file is generated.
+        \import{figures/}{pipeSpeed.pgf}
+    \caption{Execution time comparison between different methods of chaining \sort with SAMtools \texttt{view}: \textit{Not Piped} uses "\texttt{\&\&}" for chaining, both of the others use "\texttt{|}". \sort utilizes a total of 8\,GB of RAM. With this memory setting, \sort utilizes one temporary file. \threads \points The input file is a 2.3\,GB unsorted BAM file. 
     }
     \label{fig:pipeSpeeds}
 \end{figure}
-Exceptions are if the result is not piped to another SAMtools command that reads the output immediately but to an IO operation like  file writing or network transfer. \\
-Because of the possibility of exceptions and the difficulty of determining the output destination, removing the compression from SAMtools sort's output on detection of piped output is unreasonable. However, a warning should be displayed, if the output is unspecified. In this case, the filename of the output file is set to "\texttt{-}" and the output is forwarded to standard output using HTSlib. The change in the file name can be detected, and a warning can be printed to standard error, allowing users unfamiliar with compression options to adjust their parameters and save on computation time.
 
+\subsection{Prefixes for Temporary Files}
+ \sort utilizes temporary files for its external memory sort. If no prefix is specified, it writes them into the same directory as the output. If the output is to standard output, \sort places them in the current working directory. Users can set prefixes for temporary files via the "\texttt{-T}" parameter. To reduce IOWait times, we recommend choosing a directory located on a local, high-speed disk. As temporary files are deleted automatically after successful sorting, only at the time of sorting the disks capacities are used. However, it is important to remember, that temporary files are less compressed (compression level 1) than input and output files compressed with default zlib compression (compression level 6). In combination, they typically require about 20\% more disk space, than the input file, possibly exceeding the capacity of small disks.
+ 
+ In scenarios with limited computational power but very fast and readily available storage, e.g., sorting on a laptop, the compression of the intermediate files can be omitted. At the moment, this is only possible by changing the source code of \sort (\Cref{changeSource}). While this reduces the amount of computations \sort performs, it can lead to IO bottlenecks (\Cref{ioComp}).
 
-\subsubsection{Prefixes for temporary files} can be set via the "\texttt{-T}" parameter. If no prefix is specified, temporary files are written into the same directory as the output. If the output is to standard output, they are placed in the current working directory. Here, a directory on a fast disk should be chosen. As temporary files are deleted automatically after successful sorting, only at the time of sorting the disks capacities are used. However, it is important to remember, that temporary files are less compressed than regular input and output files. In combination, they require about 20\% more disk space, than the input file. Moreover, if the hard drive is very fast and additionally offers enough storage space, the compression of the intermediate files can be omitted. Unfortunately, this is not possible without changing the source code at the moment. This can be done by simply replacing the parameter \texttt{mode} of the first call of \texttt{bam\_merge\_simple} in the \texttt{bam\_sort\_core\_ext} method which is located in \texttt{bam\_sort.c}. Current values are, depending on the existence of a position too large to be stored in a BAM file, "\texttt{wzx1}" for BGZF compressed SAM files on compression level 1 and "\texttt{wbx1}" for BAM files with compression level 1. Those can be changed to "\texttt{w}" for SAM files and "\texttt{wbx0}" for uncompressed BAM files.
+\subsection{Recommendation}
+The effectiveness of the IO-related recommendations presented here hinges on the specific characteristics of the employed storage devices. While these guidelines hold for our testing system, they may require adjustments based on the relative balance between computational speed and the read/write performance of the used disk.  
+
+IO operations can limit the runtime of \sort, if it outputs uncompressed files, such as uncompressed BAM files and writes them to disk.
+To reduce the amount of IO operations while also elimination compression associated overhead in the output stage of \sort, we recommend using pipelines together with uncompressed output wherever possible.
+
+To automate the process of \sort switching to uncompressed output, detecting if its output is piped to another SAMtools command would be necessary. As this is hardly possible, we do not recommend implementing such a behavior. However, a warning should be displayed, if the output file remains unspecified. This situation commonly arises when the program is used within a pipeline. In this case, the filename of the output file is set to "\texttt{-}" and the output is forwarded to standard output using HTSlib. The change in the file name can be detected, and a warning can be printed to standard error, allowing users unfamiliar with compression options to adjust their parameters and save on computation time.
+
+If pipelining is not possible, we recommend a compression level of 1, if \sort has more than a single thread available. If \sort is run single-threaded, writing uncompressed output leads to runtime improvements.
+
+In Addition, we recommend users to change the prefix for temporary files to a local, high-speed disk. This is especially important to remember if pipelining if used. In this case \sort writes temporary files to the user's current working directory, which can lead to unexpected IO bottlenecks if the current working directory is e.g., a network mount.
+
+Although modifying \sort to use uncompressed temporary files might yield performance benefits in specific scenarios, this approach is not generally applicable to most use cases. It should only be considered if computational resources are limited, while high-speed disk space is readily available.

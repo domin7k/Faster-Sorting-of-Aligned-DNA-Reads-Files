@@ -1,4 +1,6 @@
 \section{Compression}\label{compression}
+
+\subsection{Overview}
 Compression of aligned DNA-Read files reduces storage space and thus storing costs as well as transfer-times of the files over network. Per specification, compression is a part of writing BAM files, which are files containing information on the alignment of DNA sequences to a set of reference sequences. The compression method used in BAM files is BGZF (\Cref{bgzf}). BGZF is an extension of the popular GZIP compression format. BGZF compresses files in blocks of less than 64\,KB (compressed and uncompressed), enabling fast random access to each block. Internally, BGZF compresses data in the DEFLATE format, which GZIP is a wrapper for. The library BGZF utilizes for compression is zlib.
 While compression is beneficial for saving storage space and thus reducing storage costs, it introduces additional processing steps compared to uncompressed output. Therefore, applying compression to the sorted BAM files \sort outputs leads to increased execution times for \sort.
 

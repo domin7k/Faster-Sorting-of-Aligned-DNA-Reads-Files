@@ -36,7 +36,7 @@ draw=darkgrey]
 \node (start) [startstop] {Start: \\ \#Files = 0 \\ \#BigFiles = 0\\ \texttt{MAX} := \texttt{MAX\_TMP\_FILES} \\Keep list of current \\temporary files\\};
 \node (in1) [io, below of=start, yshift=-0.5cm] {Read BAM records \\ until memory full \\ or EOF};
 \node (iseof) [decision, below of=in1, yshift=-0.5cm] {reached EOF?};
-\node (pro1) [process, left of=iseof, xshift=-2cm] {Split into Threads blocks and sort them in parallel};
+\node (pro1) [process, left of=iseof, xshift=-2cm] {Split into \#Threads blocks and sort them in parallel};
 \node (dec1) [decision, below of=pro1, yshift=-1cm] {\vspace{-0.5cm}\\$\#\text{Files} - \#\text{BigFiles} >= \texttt{MAX} / 2$?\vspace{-0.5cm}};
 \node (dec2) [decision, right of=dec1, xshift=2cm] {$\#\text{Files} >= \texttt{MAX} $?};
 \node (consb) [process, below of=dec1, yshift=-0.5cm] {consolidate\_from := \#BigFiles};
