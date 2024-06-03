@@ -23,6 +23,8 @@
 \usepackage{svg}
 \usepackage{xcolor}
 \usepackage{appendix}
+\usepackage[nottoc]{tocbibind}
+\usepackage[ngerman,english]{babel}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 
@@ -36,14 +38,13 @@
 \renewcommand\#{\protect\scalebox{0.8}{\protect\raisebox{0.4ex}{\char"0023}}}
 \definecolor{darkgrey}{RGB}{100,100,100} 
 \newcommand{\sort}{SAMtools \texttt{sort}\xspace}
-\newcommand{\points}{Data points: Median, Error bars: Fastest and slowest of 3 runs. }
+\newcommand{\points}{Data points: Median, Error bars: fastest and slowest of 3 runs. }
 \newcommand{\parents}{Numbers in parentheses indicate the compression level. }
-\newcommand{\threads}{One thread is single threaded computation, for a higher thread count, \sort uses the threads in addition to the main thread. }
+\newcommand{\threads}{One thread is single threaded computation; for a higher thread count, \sort uses the threads in addition to the main thread. }
 \interfootnotelinepenalty=100000
 
 
 \begin{document}
-
 
 %
 \title{Faster Sorting of Aligned DNA-Read Files}
@@ -56,7 +57,7 @@
 % Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
 % Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
 %
-\authorrunning{D. Siebelt}
+\authorrunning{D.\@ Siebelt}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
@@ -69,12 +70,19 @@
 %
 \maketitle              % typeset the header of the contribution
 %
-% \begin{abstract}
-% The abstract should briefly summarize the contents of the paper in
-% 15--250 words.
+\begin{abstract}
+In the analysis of DNA sequencing data for finding disease causing mutations, to understand evolutionary relationships between species, and to find variants, DNA-Reads are compared to a reference genome, which is a representative example for a set of genes of a species. Sorting these aligned DNA-Reads by their position within the reference sequence is a crucial step in many of these downstream analyses. \sort, a widely used tool, performs external memory sorting of aligned DNA-Reads stored in the BAM format (Binary Alignment Map). This format allows for compressed storage of alignment data. \sort provides the most comprehensive set of features while exhibiting demonstrably faster execution times than its open source alternatives.  In this work, we analyze \sort for sorting BAM files and propose methods to reduce its runtime. We divide the analysis into three parts: management of temporary files, compression, and input/output (IO).
+For the management of temporary files, we find that the maximum number of temporary files \sort can open concurrently is lower than the maximum number of open files permitted by the operating system. This results in an unnecessarily high number of merges of temporary files into larger temporary files, introducing overhead as \sort performs extra write and compression operations. To overcome this, we propose a dynamic limit for the number of temporary files, adapting to the operating system's soft limit for open files.
+For compression, we test seven different libraries for compatible compression and a range of compression levels, identifying options that offer faster compression and result in a speedup of up to five times in single-threaded execution of \sort.
+For IO, we demonstrate that a minimal level of compression avoids IO overhead, thereby reducing the runtime of \sort compared to uncompressed output. However, we also show that uncompressed output can be used in the pipelining of SAMtools commands to reduce the runtime of subsequent SAMtools commands.
+Our proposed modifications to \sort and user behavior have the potential to achieve speedups of up to 6. This represents an important contribution to the field of bioinformatics, considering the widespread adoption of \sort evidenced by its over 5,000 citations and over 5.1 million downloads through Bioconda.
+\end{abstract}
 
-% \keywords{First keyword  \and Second keyword \and Another keyword.}
-% \end{abstract}
+\begin{otherlanguage}{ngerman}
+\begin{abstract}
+    
+\end{abstract}
+\end{otherlanguage}
 %
 \setcounter{tocdepth}{2}
 \tableofcontents
@@ -99,7 +107,7 @@
 \input{chapters/approaches}
 \newpage
 \input{chapters/conclusion}
-\input{chapters/appendix}
+\newpage
 
 %
 % ---- Bibliography ----
@@ -109,5 +117,5 @@
 %
 \bibliographystyle{splncs04}
 \bibliography{refs,references}
-
+\input{chapters/appendix}
 \end{document}
