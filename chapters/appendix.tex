@@ -55,7 +55,6 @@ For the compression libraries, users can choose one of {\texttt{zlib}}, {\texttt
     \item {\texttt{slz}} only supports level \texttt{1}.
     \item While {\texttt{zopfli}} does not use compression levels in the traditional sense, it allows specifying an amount of iterations (greater than or equal to \texttt{1}) within the compression level parameter of 7BGZF.
 \end{itemize}
-
 Example for calling \sort with igzip and compression level 1: \\
 \texttt{BGZF\_METHOD=igzip1 LD\_PRELOAD=/path/to/7bgzf.so samtools sort …}
 
