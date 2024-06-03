@@ -57,7 +57,7 @@
 % Second Author\inst{2,3}\orcidID{1111-2222-3333-4444} \and
 % Third Author\inst{3}\orcidID{2222--3333-4444-5555}}
 %
-\authorrunning{D.\@ Siebelt}
+\authorrunning{D.\@ Siebelt \hspace{4cm}}
 % First names are abbreviated in the running head.
 % If there are more than two authors, 'et al.' is used.
 %
@@ -70,20 +70,65 @@
 %
 \maketitle              % typeset the header of the contribution
 %
+\newpage
+\thispagestyle{empty}
+\phantom{abc}
+\newpage
+
+\thispagestyle{empty}
+\null\vfill
+\noindent\hbox to \textwidth{\hrulefill} 
+%
+% Gemäß Studien- und Prüfungsordnung Bachelor Informatik des KIT,
+% § 14 (5) vom 10.05.2022
+% 
+I declare that I have developed and written the enclosed
+thesis completely by myself. 
+I have not used any other than the aids that I have mentioned. 
+I have marked all parts of the thesis that I have included from 
+referenced literature, either in their original wording or paraphrasing their
+contents. 
+I have followed the by-laws to implement scientific integrity at KIT.\\
+ 
+ 
+%% ---------------------------------------------
+%% | Replace PLACE and DATE with actual values |
+%% ---------------------------------------------
+\noindent\textbf{Karlsruhe, 03.06.2024}
+\vspace{1.5cm}
+ 
+\noindent\dotfill\hspace*{8.0cm}\\
+(Dominik Siebelt) 
+\newpage
+\thispagestyle{empty}
+\phantom{abc}
+\newpage
+\hspace{2cm}
 \begin{abstract}
-In the analysis of DNA sequencing data for finding disease causing mutations, to understand evolutionary relationships between species, and to find variants, DNA-Reads are compared to a reference genome, which is a representative example for a set of genes of a species. Sorting these aligned DNA-Reads by their position within the reference sequence is a crucial step in many of these downstream analyses. \sort, a widely used tool, performs external memory sorting of aligned DNA-Reads stored in the BAM format (Binary Alignment Map). This format allows for compressed storage of alignment data. \sort provides the most comprehensive set of features while exhibiting demonstrably faster execution times than its open source alternatives.  In this work, we analyze \sort for sorting BAM files and propose methods to reduce its runtime. We divide the analysis into three parts: management of temporary files, compression, and input/output (IO).
+In the analysis of DNA sequencing data for finding disease causing mutations, to understand evolutionary relationships between species, and to find variants, DNA-Reads are compared to a reference genome. A reference genome is a representative example for a set of genes of a species. Sorting these aligned DNA-Reads by their position within the reference sequence is a crucial step in many of these downstream analyses. \sort, a widely used tool, performs external memory sorting of aligned DNA-Reads stored in the BAM format (Binary Alignment Map). This format allows for compressed storage of alignment data. \sort provides the most comprehensive set of features while exhibiting demonstrably faster execution times than its open source alternatives.  In this work, we analyze \sort for sorting BAM files and propose methods to reduce its runtime. We divide the analysis into three parts: management of temporary files, compression, and input/output (IO).
 For the management of temporary files, we find that the maximum number of temporary files \sort can open concurrently is lower than the maximum number of open files permitted by the operating system. This results in an unnecessarily high number of merges of temporary files into larger temporary files, introducing overhead as \sort performs extra write and compression operations. To overcome this, we propose a dynamic limit for the number of temporary files, adapting to the operating system's soft limit for open files.
 For compression, we test seven different libraries for compatible compression and a range of compression levels, identifying options that offer faster compression and result in a speedup of up to five times in single-threaded execution of \sort.
 For IO, we demonstrate that a minimal level of compression avoids IO overhead, thereby reducing the runtime of \sort compared to uncompressed output. However, we also show that uncompressed output can be used in the pipelining of SAMtools commands to reduce the runtime of subsequent SAMtools commands.
 Our proposed modifications to \sort and user behavior have the potential to achieve speedups of up to 6. This represents an important contribution to the field of bioinformatics, considering the widespread adoption of \sort evidenced by its over 5,000 citations and over 5.1 million downloads through Bioconda.
 \end{abstract}
-
+\newpage
+\hspace{2cm}
 \begin{otherlanguage}{ngerman}
 \begin{abstract}
-    
+Bei der Analyse von DNA-Sequenzierungsdaten, um krankheitsverursachende Mutationen zu finden, evolutionäre Beziehungen zwischen Arten zu verstehen und Varianten zu identifizieren, werden DNA-Reads mit einem Referenzgenom verglichen. Ein Referenzgenom ist ein repräsentatives Beispiel für ein Set von Genen einer Spezies. Das Sortieren dieser aligned DNA-Reads nach ihrer Position innerhalb der Referenzsequenz ist ein entscheidender Schritt in vielen dieser nachgelagerten Analysen. \sort, ein weit verbreitetes Tool, führt das externe Speichersortieren von aligned DNA-Reads durch, die im BAM-Format (Binary Alignment Map) gespeichert sind. Dieses Format ermöglicht die komprimierte Speicherung von Ausrichtungsdaten. \sort bietet das umfassendste Set an Funktionen und weist nachweislich schnellere Ausführungszeiten auf als seine Open-Source-Alternativen. In dieser Arbeit analysieren wir \sort zum Sortieren von BAM-Dateien und schlagen Methoden zur Reduzierung der Laufzeit vor. Wir unterteilen die Analyse in drei Teile: Verwaltung von Zwischendateien, Komprimierung und Eingabe/Ausgabe (IO).
+Für die Verwaltung von Zwischendateien stellen wir fest, dass die maximale Anzahl Zwischendateien, die \sort gleichzeitig öffnen kann, geringer ist als die maximale Anzahl offener Dateien, die vom Betriebssystem zugelassen wird. Dies führt zu einer unnötig hohen Anzahl von Merges von Zwischendateien zu größeren Zwischendateien, was zusätzlichen Aufwand bedeutet, da \sort zusätzliche Schreib- und Komprimierungsvorgänge durchführt. Um dies zu überwinden, schlagen wir ein dynamisches Limit für die Anzahl von Zwischendateien vor, das sich an das soft-limit des Betriebssystems für offene Dateien anpasst.
+Für die Komprimierung testen wir sieben verschiedene kompatible Libraries und eine Reihe von Komprimierungsstufen (Level), um Möglichkeiten zu identifizieren, die schnellere Komprimierung bieten und zu einer bis zu fünfmal schnelleren Ausführung von \sort im Single-Thread-Betrieb führen.
+Für die Ein- und Ausgabe zeigen wir, dass ein minimales Komprimierungsniveau IO-Overhead vermeidet und dadurch die Laufzeit von \sort im Vergleich zu unkomprimiertem Output reduziert. Wir zeigen jedoch auch, dass unkomprimierter Output im Pipelining von SAMtools-Befehlen verwendet werden kann, um die Laufzeit aufeinanderfolgender SAMtools-Befehle zu reduzieren.
+Unsere vorgeschlagenen Änderungen an \sort und dem Benutzerverhalten haben das Potenzial, Speedups von bis zu 6 zu erreichen. Dies stellt einen wichtigen Beitrag im Bereich der Bioinformatik dar, angesichts der weit verbreiteten Verwendung von \sort, die durch über 5.000 Zitate und über 5,1 Millionen Downloads über Bioconda belegt wird.
 \end{abstract}
 \end{otherlanguage}
 %
+
+\newpage
+\thispagestyle{empty}
+\phantom{abc}
+\newpage
+
 \setcounter{tocdepth}{2}
 \tableofcontents
 \newpage
